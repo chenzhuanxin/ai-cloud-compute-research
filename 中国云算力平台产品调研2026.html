@@ -1,0 +1,972 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>中国云算力平台产品调研（2026 年 10 月）</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312564C'/%3E%3Ccircle cx='13' cy='13' r='5' fill='none' stroke='%23fff' stroke-width='2.2'/%3E%3Cpath d='M10.5 22.5c1.4-2 3.1-3 5-3s3.6 1 5 3' fill='none' stroke='%23C4762A' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<style>
+:root{
+  --ink:#1F2329;
+  --ink-2:#646A73;
+  --ink-3:#8A939B;
+  --line:#DEE3E8;
+  --line-2:#EDF1F4;
+  --primary:#12564C;
+  --primary-soft:#E8F0EE;
+  --accent:#C4762A;
+  --accent-soft:#FAEFE3;
+  --bg:#FFFFFF;
+  --bg-soft:#F7F9FA;
+  --serif:"Noto Serif SC","Songti SC",Georgia,"Microsoft YaHei",serif;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-weight:400;font-size:16px;line-height:1.78;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+
+/* ===== 报头 ===== */
+.masthead{border-bottom:2px solid var(--ink);padding:56px 0 22px;margin-bottom:0;}
+.kicker{
+  font-size:13px;letter-spacing:.14em;color:var(--primary);
+  font-weight:700;margin:0 0 18px;text-transform:none;
+}
+h1.title{
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(28px,4.6vw,50px);line-height:1.22;letter-spacing:-.01em;
+  margin:0 0 16px;max-width:20em;
+}
+.subtitle{font-size:17px;color:var(--ink-2);margin:0 0 26px;max-width:44em;line-height:1.7;}
+.meta-row{
+  display:flex;flex-wrap:wrap;gap:10px 34px;font-size:13.5px;color:var(--ink-2);
+  border-top:1px solid var(--line);padding-top:14px;
+}
+.meta-row b{color:var(--ink);font-weight:700;}
+
+.strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border-bottom:1px solid var(--line);margin-bottom:0;
+}
+.strip .cell{padding:22px 22px 22px 0;border-right:1px solid var(--line-2);}
+.strip .cell:last-child{border-right:0;}
+.strip .num{
+  font-family:var(--serif);font-weight:700;font-size:clamp(22px,3.1vw,34px);
+  color:var(--primary);line-height:1.1;font-variant-numeric:tabular-nums;
+}
+.strip .lbl{font-size:13px;color:var(--ink-2);margin-top:7px;line-height:1.55;}
+
+/* ===== 章节 ===== */
+section{padding:54px 0 8px;border-bottom:1px solid var(--line-2);}
+section:last-of-type{border-bottom:0;}
+h2.sec{
+  font-family:var(--serif);font-weight:700;font-size:clamp(21px,2.6vw,28px);
+  margin:0 0 8px;line-height:1.3;display:flex;gap:14px;align-items:baseline;
+}
+h2.sec .no{
+  font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.08em;
+  font-variant-numeric:tabular-nums;flex:none;padding-top:6px;
+}
+.lede{font-size:16.5px;color:var(--ink-2);max-width:46em;margin:0 0 26px;line-height:1.8;}
+p{margin:0 0 16px;}
+h3{font-family:var(--serif);font-weight:600;font-size:18.5px;margin:30px 0 12px;}
+
+/* ===== 表格 ===== */
+.tablewrap{overflow-x:auto;margin:0 0 10px;border:1px solid var(--line);}
+table{border-collapse:collapse;width:100%;table-layout:fixed;min-width:1120px;}
+thead th{
+  background:var(--bg-soft);text-align:left;font-weight:700;font-size:13.5px;
+  color:var(--ink-2);padding:12px 14px;border-bottom:1px solid var(--line);
+  vertical-align:bottom;line-height:1.5;
+}
+tbody td{
+  padding:14px;border-bottom:1px solid var(--line-2);vertical-align:top;
+  font-size:14px;line-height:1.68;overflow-wrap:anywhere;
+}
+tbody tr:last-child td{border-bottom:0;}
+tbody tr:hover{background:#FCFDFD;}
+.pname{font-weight:700;font-size:14.5px;}
+.dev{display:block;color:var(--ink-3);font-size:12.5px;margin-top:3px;line-height:1.5;}
+.score{
+  font-family:var(--serif);font-weight:700;font-size:19px;color:var(--primary);
+  font-variant-numeric:tabular-nums;display:block;
+}
+.score.na{color:var(--ink-3);font-size:15px;}
+.basis{display:block;color:var(--ink-3);font-size:12px;margin-top:5px;line-height:1.55;}
+a{color:var(--primary);text-decoration:none;border-bottom:1px solid rgba(18,86,76,.35);}
+a:hover{border-bottom-color:var(--primary);}
+a.ext::after{content:"↗";font-size:.78em;vertical-align:.18em;margin-left:2px;color:var(--ink-3);}
+.note-inline{color:var(--ink-3);font-size:12.5px;}
+.tag{
+  display:inline-block;font-size:12px;font-weight:700;line-height:1.5;
+  padding:1px 8px;border:1px solid var(--line);color:var(--ink-2);
+  background:var(--bg-soft);margin-bottom:6px;margin-right:4px;
+}
+.tag.cat-video{color:#0E4A41;background:#E8F0EE;border-color:#C9DCD6;}
+.tag.cat-live{color:#7A4712;background:var(--accent-soft);border-color:#E7D2B8;}
+.tag.cat-clone{color:#1F4E79;background:#E8EFF5;border-color:#C9D8E6;}
+.tag.cat-interactive{color:#4C5636;background:#EFF1E6;border-color:#D5DAC4;}
+.tag.free{color:#fff;background:var(--primary);border-color:var(--primary);}
+.tag.paid{color:#7A4712;background:var(--accent-soft);border-color:#E7D2B8;}
+ul.tight{margin:0;padding-left:18px;}
+ul.tight li{margin-bottom:5px;}
+
+/* ===== 图表 ===== */
+.chart-card{border:1px solid var(--line);padding:22px 20px 12px;margin:0 0 10px;background:var(--bg);}
+.chart-title{font-family:var(--serif);font-weight:600;font-size:16.5px;margin:0 0 4px;}
+.chart-sub{font-size:13px;color:var(--ink-2);margin:0 0 14px;line-height:1.62;}
+.chart{width:100%;height:520px;}
+.chart.tall{height:640px;}
+.caption{font-size:12.5px;color:var(--ink-3);line-height:1.7;margin:6px 0 0;}
+
+/* ===== 结论块 ===== */
+.findings{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);}
+.findings .f{padding:24px 24px 8px 0;border-right:1px solid var(--line-2);}
+.findings .f:last-child{border-right:0;padding-right:0;}
+.findings .f .t{font-family:var(--serif);font-weight:700;font-size:16.5px;margin:0 0 8px;line-height:1.5;}
+.findings .f p{font-size:14px;color:var(--ink-2);line-height:1.72;margin:0;}
+
+/* ===== 时间线 ===== */
+.timeline{margin:6px 0 0;position:relative;}
+.timeline::before{
+  content:"";position:absolute;top:11px;bottom:11px;
+  left:116.5px;width:1px;background:var(--line);
+}
+.tnode{display:grid;grid-template-columns:104px 26px 1fr;align-items:start;}
+.tnode .when{
+  font-size:13px;font-weight:700;color:var(--primary);text-align:right;
+  padding-right:10px;line-height:22px;font-variant-numeric:tabular-nums;
+}
+.tnode .axis{display:flex;justify-content:center;}
+.tnode .dot{position:relative;z-index:1;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--primary);margin-top:6px;}
+.tnode.hot .dot{background:var(--accent);border-color:var(--accent);}
+.tnode .body{padding:0 0 22px 14px;}
+.tnode:last-child .body{padding-bottom:0;}
+.tnode .what{font-weight:700;font-size:15px;margin:0 0 3px;line-height:1.55;}
+.tnode .why{font-size:14px;color:var(--ink-2);margin:0;line-height:1.7;}
+
+/* ===== 待确认 ===== */
+.todo{border-top:1px solid var(--line);}
+.todo .t{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--line-2);}
+.todo .t .n{font-family:var(--serif);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;font-size:15px;}
+.todo .t .c{font-size:14px;line-height:1.72;color:var(--ink);}
+.todo .t .c b{font-weight:700;}
+
+/* ===== 信源索引 ===== */
+.srcgrp{margin-bottom:28px;}
+.srcgrp h3{margin-top:0;}
+.srclist{margin:0;padding:0;}
+.srcitem{display:grid;grid-template-columns:112px 1fr;gap:12px;margin-bottom:12px;list-style:none;}
+.srclabel{font-size:12.5px;color:var(--ink-3);font-weight:700;line-height:1.6;}
+.srcbody{font-size:14px;line-height:1.7;overflow-wrap:anywhere;}
+.srcfield{display:block;margin-top:2px;font-size:12.5px;color:var(--ink-3);}
+
+footer{padding:34px 0 56px;color:var(--ink-3);font-size:13px;line-height:1.8;}
+footer b{color:var(--ink-2);}
+
+@media (max-width:960px){
+  .strip{grid-template-columns:repeat(2,1fr);}
+  .strip .cell:nth-child(2){border-right:0;}
+  .strip .cell{border-bottom:1px solid var(--line-2);padding-right:16px;}
+  .strip .cell:nth-child(3),.strip .cell:nth-child(4){border-bottom:0;}
+  .findings{grid-template-columns:1fr;}
+  .findings .f{border-right:0;border-bottom:1px solid var(--line-2);padding:20px 0 14px;}
+  .findings .f:last-child{border-bottom:0;}
+  .tablewrap{border:0;overflow:visible;}
+  table{min-width:0;table-layout:auto;display:block;}
+  thead{display:none;}
+  tbody{display:block;}
+  tbody tr{display:block;border:1px solid var(--line);margin-bottom:14px;padding:4px 0;}
+  tbody td{display:grid;grid-template-columns:88px 1fr;gap:10px;border-bottom:1px solid var(--line-2);padding:10px 14px;font-size:13.5px;}
+  tbody td:last-child{border-bottom:0;}
+  tbody td::before{
+    content:attr(data-label);font-size:12.5px;color:var(--ink-3);font-weight:700;line-height:1.6;
+  }
+  .chart{height:640px;}
+  .chart.tall{height:840px;}
+  .tnode{grid-template-columns:78px 20px 1fr;}
+  .tnode .when{font-size:12px;padding-right:7px;}
+  .tnode .body{padding-left:10px;}
+  .timeline::before{left:87.5px;}
+  .meta-row{font-size:14px;}
+  .strip .lbl{font-size:13.5px;}
+  .findings .f p{font-size:14.5px;}
+  tbody td{font-size:14.5px;grid-template-columns:98px 1fr;}
+  tbody td::before{font-size:13px;}
+  .dev{font-size:14px;}
+  .tablewrap a.ext{display:inline-block;padding:10px 0;}
+  .srcitem{grid-template-columns:1fr;gap:2px;}
+  .srclabel{font-size:13px;}
+  .srcbody{font-size:14.5px;}
+  .kicker{font-size:14px;}
+  .strip .lbl{font-size:14px;}
+  .tag{font-size:14px;}
+  h2.sec .no{font-size:14px;}
+}
+@media (max-width:520px){
+  .wrap{padding:0 16px;}
+  .chart{height:720px;}
+  .tnode{grid-template-columns:66px 16px 1fr;}
+  .timeline::before{left:73.5px;}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="kicker">云算力平台调研 · 中国（大陆）· 2026 年 10 月口径</p>
+    <h1 class="title">中国云算力平台产品调研</h1>
+    <p class="subtitle">覆盖第三方算力平台、云厂商 GPU 实例、共享与分布式算力与免费普惠算力四类：谁在运营、用什么卡、按什么单位计价、免费用多少、上下机与排队怎么算。24 个在营产品逐一核验，每条结论附可追溯来源、三类信源交叉验证。</p>
+    <div class="meta-row">
+      <span>数据口径：<b>截至 2026-10-08</b></span>
+      <span>计价货币：<b>人民币（CNY）</b></span>
+      <span>信源交叉：<b>官方站点 / 官方文档 / 比价与开发者社区</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="strip">
+    <div class="cell"><div class="num">24</div><div class="lbl">可评分在营产品</div></div>
+    <div class="cell"><div class="num">13</div><div class="lbl">含免费额度或免费试用</div></div>
+    <div class="cell"><div class="num">¥0–7,188</div><div class="lbl">单卡最低月费门槛区间（元/月）</div></div>
+    <div class="cell"><div class="num">4</div><div class="lbl">覆盖供给类型数</div></div>
+  </div>
+</div>
+
+<main class="wrap">
+
+<section>
+  <h2 class="sec"><span class="no">01</span>核心结论</h2>
+  <p class="lede">国内云算力供给在 2025—2026 年形成清晰的三层结构：头部云厂商的 GPU 实例（阿里云、腾讯云、华为云、火山引擎）承接企业级与合规需求；垂直算力租赁平台（AutoDL、恒源云、优云智算等）以按秒/按时计费与镜像生态服务个人与中小团队；运营商与高校普惠算力（天翼云、移动云、启智社区、飞桨 AI Studio）补充低成本与免费供给。2026 年 3—10 月的一轮涨价，把「拿得到卡」重新变成比单价更重要的变量。</p>
+  <div class="findings">
+    <div class="f"><p class="t">按秒/按时计费与「镜像开箱即用」已是租赁平台共识基线</p><p>本轮核验的 11 家平台型租赁产品全部支持按量计费，粒度从按秒（AutoDL、优云智算、恒源云）到按分钟（趋动云、潞晨云、Featurize）；镜像市场与预置环境成为默认配置，从注册到跑通第一个任务被压缩到分钟级。价格锚点集中在 4090 与 A100 一档：RTX 4090 多在 1.10—2.15 元/小时，A100 80GB 多在 5.98—8.00 元/小时（第三方比价口径）。</p></div>
+    <div class="f"><p class="t">云厂商 GPU 实例仍以包月与预留为主，门槛高但合规与稳定性最好</p><p>阿里云、腾讯云、华为云、火山引擎、百度智能云的 GPU 实例普遍提供包年包月、按量、抢占式与预留实例券四种计费：单卡月付门槛从 ¥1,218（京东云 GCS 公示价）到 ¥46,000（腾讯云 GN10Xp 八卡整机）不等，火山引擎 ai.gni3cl 档 ¥18.47/小时、¥8,527.25/月。发票、等保、专属资源池与大额议价能力是其相对租赁平台的核心差异，代价是入门配置与公开报价的透明度不足。</p></div>
+    <div class="f"><p class="t">免费额度已成获客标配，但 2026 年 3 月起「涨价」取代「降价」成为主旋律</p><p>24 个在营产品中 12 个提供免费额度或免费试用，形态以注册算力金（趋动云、潞晨云、揽睿星舟）与持续免费档（启智社区普惠算力、飞桨 AI Studio 每日赠算力）为主。与此同时，阿里云与百度智能云于 2026-03-18 同日宣布 AI 算力涨价 5%—34%，Nebius 自 2026-10-01 起把 H100 从 3.85 上调至 4.50 美元/GPU·小时，AWS 于 2026-10-07 上调 GPU Capacity Blocks 约 15%——供给紧张已从海外传导到国内。</p></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">02</span>产品字段总表</h2>
+  <p class="lede">同一行回答同一组问题：谁在运营、属于哪一类算力供给、去哪开通、免费用多少、按什么价格卖、能力与短板在哪。评分为主观共识评分，非厂商指标；价格为 2026-10-08 人民币口径，海外产品另附美元原值。</p>
+  <div class="tablewrap">
+    <table>
+      <colgroup>
+        <col style="width:15%"><col style="width:7%"><col style="width:13%">
+        <col style="width:12%"><col style="width:17%"><col style="width:16%"><col style="width:20%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>产品 / 开发方</th>
+          <th>评分</th>
+          <th>评分依据</th>
+          <th>官方入口</th>
+          <th>免费额度</th>
+          <th>价格</th>
+          <th>特点与局限</th>
+        </tr>
+      </thead>
+      <tbody id="mainTable">
+      </tbody>
+    </table>
+  </div>
+  <p class="caption" id="tableCaption"></p>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">03</span>综合质量评分对比</h2>
+  <p class="lede">评分为主观共识评分，综合官方公开信息、行业比价站点与开发者社区口碑给出，满分 10 分。评估维度：可用算力规模与卡型覆盖、计价粒度与价格竞争力、开通与实名/充值门槛、稳定性与排队/供给保障、企业级合规与生态完备度；四类供给（第三方算力平台 / 云厂商 GPU 实例 / 共享与分布式算力 / 免费普惠算力）按各自核心维度加权，四类之间不宜直接横向比较。</p>
+  <div class="chart-card">
+    <p class="chart-title">（24）个对象的综合质量评分（满分 10）</p>
+    <p class="chart-sub">颜色区分供给类型：深青为第三方算力平台，赭色为云厂商 GPU 实例，蓝为共享与分布式算力，橄榄为免费普惠算力。</p>
+    <div class="chart tall" id="chartScore"></div>
+    <p class="caption">数据口径：2026-10-08。评分非厂商官方指标，也不等同于性能基准测试。</p>
+  </div>
+  <p>第一梯队集中在 8.5 分以上的四个对象：阿里云（8.8）、AutoDL（8.6）、腾讯云（8.6）、华为云（8.5）。评分差异的主要来源并不是单卡规格，而是「拿得到卡」的确定性与配套：阿里云、腾讯云、华为云胜在规模、合规与包年包月/预留体系，AutoDL 胜在镜像生态与按秒计费下的实际可用性；纯低价平台（算家云 6.9、启智社区 7.0）则受限于卡型新旧、排队与配额规则，稳定性评分被压低。需要说明的是四类供给并不可直接横向比较：免费普惠算力看的是额度可持续性，运营商背景的云厂商看的是政企适配与国产卡兼容，本图只按各自核心维度加权后的综合分排序。</p>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">04</span>价格与免费额度的位置</h2>
+  <p class="lede">把「单卡最低月费门槛」和「综合评分」放在同一坐标系，看免费档、租赁档与云厂商档的分布规律。</p>
+  <div class="chart-card">
+    <p class="chart-title">单卡最低月费门槛与综合评分的关系</p>
+    <p class="chart-sub">横轴为可查证的单卡最低月费门槛（元/月），完全免费者记为 0；有官方月租/包月档的直接取该档（如京东云单卡 ¥1,218/月、腾讯云 DLC 单卡 ¥7,188/月），仅有小时价的按单卡最低时价 × 720 小时折算。口径无法折算者不纳入本图。</p>
+    <div class="chart" id="chartPrice"></div>
+    <p class="caption">未纳入本图的条目及其原因见总表与待确认清单。</p>
+  </div>
+  <p>把单卡月费门槛与评分放在一起，可以看到国内云算力并没有形成「越贵越好」的单一关系：0—1,400 元/月区间聚集了 14 个对象，评分跨度从 6.9 到 8.6，其中 AutoDL（约 ¥1,354/月折算，8.6）与趋动云（约 ¥353/月折算，7.6）分别代表了「体验优先」与「极限低价」两条路线；3,000 元/月以上的云厂商档（阿里云 ¥3,234、火山引擎 ¥4,391、百度智能云 ¥5,298、移动云 ¥6,858、腾讯云 ¥7,188）评分集中在 7.1—8.8，价差主要来自卡型新旧、带宽与合规配套，而非单纯的性价比。需要提醒的是「小时价 × 720 小时」只是满月折算的记账口径，真实按量使用远低于该值。未纳入本图的对象：华为云（专属资源池按需 ¥18.682—135.872/小时，无法折算单卡月费）、无问芯穹与天翼云（价格口径待确认）、阿里云 PAI 与百度百舸（平台无独立单卡月费）。</p>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">05</span>关键节点</h2>
+  <p class="lede">按公开可查的停服、降价、涨价与规格终止时点排列，用于理解 2026 年算力供需是怎么反转的。</p>
+  <div class="timeline" id="timeline"></div>
+  <p style="margin-top:22px;">2024—2025 年是「低价抢客」阶段：平台以免费额度与降价获客，二线服务商出清（Banana.dev 于 2024-03-31 关停 Serverless GPU）。2026 年 3 月成为分水岭：阿里云与百度智能云同日宣布 AI 算力涨价 5%—34%，随后阿里云部分 GPU 规格族进入 EOS 终止流程、Nebius 将 H100 从 3.85 上调至 4.50 美元/GPU·小时、AWS 于 10 月 7 日上调 GPU Capacity Blocks 约 15%。涨价的共同理由是「AI 需求爆发、核心硬件成本上涨」——算力从买方市场转向卖方市场，「可持续拿卡」开始比「单价最低」更值得计价。</p>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">06</span>厂商能力核验</h2>
+  <p class="lede">对已停服、已被整合、已终止规格，以及「名字像算力平台但实际不对外零售」的对象逐一给出核验结论，构成本轮调研的排除清单（VERIFIED）；没有能力或无法核实就如实写。</p>
+  <div class="tablewrap">
+    <table>
+      <colgroup><col style="width:16%"><col style="width:16%"><col style="width:68%"></colgroup>
+      <thead>
+        <tr><th>厂商 / 产品</th><th>核验结论</th><th>说明</th></tr>
+      </thead>
+      <tbody id="verifyTable"></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">07</span>信源索引</h2>
+  <p class="lede">按产品分组，标注每条来源支撑哪些字段。三类信源交叉验证：官方站点与官方文档、行业比价与横评站点、开发者社区与公开报道。</p>
+  <div id="sourceIndex"></div>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">08</span>待确认与无法核实项</h2>
+  <p class="lede">以下条目在本轮公开检索范围内无法取得可靠官方口径，如实列出，未作推测填补。</p>
+  <div class="todo" id="todoList"></div>
+</section>
+
+<footer>
+  <p><b>方法与免责：</b>本报告信息采集截止北京时间 2026 年 10 月 8 日，全部价格以人民币计（海外产品引用美元原值，按 1 USD ≈ 7.1 CNY 估算）。“云算力平台质量评分”为主观共识评分，由作者综合官方公开信息、行业比价站点与开发者社区口碑给出，非厂商官方指标，也不等同于客观基准测试；同一平台在不同卡型、地域与库存时点下价格与可用性差异较大。</p>
+  <p><b>已剔除的非官方来源：</b>代理商、第三方域名自称官方或提供更低报价的页面，均不作为官方依据；带推广性质的内容源已在引用时单独标注。本报告中「美元/GPU·小时」为厂商官方或权威比价站点的公开口径。</p>
+  <p>价格、库存与免费额度变动频繁，正式采购前请以厂商官方页面与控制台实价为准。</p>
+</footer>
+
+<script>
+/* =====================================================================
+   填充说明（两个子代理按此规范填充，勿改动 CSS 与渲染函数结构）：
+   1. PRODUCTS：每个产品一个对象，字段见下。cat 取值 video/live/clone/interactive；
+      score 为 10 分制主观共识分（可小数，null 表示不评分，如"无此能力"条目）；
+      avail 取值 free（有免费额度）/ paid（付费或仅 API）；
+      site 为官方域名（label 显示名，url 链接）；
+      free 写免费额度具体口径；price 写价格（国内人民币；海外 USD 并附 cny 约合人民币）；
+      basis 写 10-25 字评分依据；note 写特点与局限（40-90 字）。
+   2. PRICE_POINTS：x=最低付费月费（元，免费记 0，海外换算为人民币），y=评分，free=true/false，lp=标签位置(top/bottom/right/left)。
+   3. TIMELINE：{when, what, why, hot}，hot=true 表示关键节点（赭色圆点）。
+   4. VERIFIED：{name, verdict, note}，verdict 可含 <span class="tag">…</span>。
+   5. SOURCES：按产品分组，items 为 [来源类型, 链接HTML(或纯文本), 支撑字段]。
+   6. TODOS：[产品, 待确认说明]。
+   7. 除数据数组外，还需替换：报头 kicker/h1/subtitle/meta-row、strip 四个数字、
+      各 section 的 lede 与解读段落、（01）核心结论三卡、（05）时间线总结。
+   8. 完成后用 Edge/Chrome 无头模式截桌面与移动两张图存入 _shots 目录并自查布局。
+===================================================================== */
+
+const PRODUCTS = [
+  {
+    name:"AutoDL 算力云", dev:"广州无问智算（AutoDL）", cat:"platform",
+    score:8.6, avail:"free",
+    site:{label:"autodl.com", url:"https://www.autodl.com/"},
+    free:"新用户注册赠算力券/体验金（第三方口径约 ¥10）；学生可免费开通会员，享会员折扣价",
+    price:"RTX 4090 24GB 约 ¥1.88–2.68/小时、A100 80GB 约 ¥5.98/小时；按秒计费、关机不计费；会员 95 折（第三方比价口径，官网档位随市场浮动）",
+    basis:"共识区间 8.3–8.8；国内算力租赁规模与镜像生态第一",
+    note:"主机市场模式汇集第三方机房，镜像与一键部署生态最全，4090/A100 供给足、价格透明；短板是高峰抢卡、无统一大客户折扣。"
+  },
+  {
+    name:"矩池云 Matpool", dev:"矩池云（贝式计算）", cat:"platform",
+    score:7.9, avail:"paid",
+    site:{label:"matpool.com", url:"https://www.matpool.com/"},
+    free:"待确认（旧版活动为绑定公众号赠免费体验时长，现版未公示统一额度）",
+    price:"RTX 3090 约 ¥1.29/小时起、RTX 4090 约 ¥1.98–2.09/小时；学生 95 折、教师 9 折（第三方比价口径）",
+    basis:"共识区间 7.6–8.2；高校与科研用户口碑好、折扣分层清晰",
+    note:"以「GPU 云 + 镜像市场」服务高校与 AI 团队，按小时计费、折扣分层与教程完整；短板是卡型以中端为主，高端供给与规模不及头部。"
+  },
+  {
+    name:"恒源云 GPUSHARE", dev:"恒源智享云（GPUSHARE）", cat:"platform",
+    score:8.0, avail:"free",
+    site:{label:"gpushare.com", url:"https://gpushare.com/"},
+    free:"临时数据盘 /hy-tmp 免费（关机后 24 小时清除）；个人数据盘有免费容量档；促销期提供 1 元档 GPU",
+    price:"按量计费精确到秒；RTX 3090 约 ¥0.94/小时、促销「1 元卡」约 ¥1.14/小时；会员 85–95 折（第三方与活动口径）",
+    basis:"共识区间 7.7–8.3；按秒计费与免费数据盘对个人开发者友好",
+    note:"官方称覆盖 29+ 省市、49+ 种 GPU、2999+ 张卡，计费粒度细、容器快速启动；短板是热门卡型排队明显、价格页更新不频繁。"
+  },
+  {
+    name:"智星云", dev:"上海亘聪科技 · 安诺其集团旗下（AI Galaxy）", cat:"platform",
+    score:7.8, avail:"paid",
+    site:{label:"ai-galaxy.cn", url:"https://ai-galaxy.cn/"},
+    free:"待确认（有学生专属折扣与限时活动，未公示统一免费额度）",
+    price:"RTX 4090 24G 约 ¥1.10/小时起、RTX 4090 48G 约 ¥2.53/小时、A100 80G 约 ¥8.0/小时、V100 32G 约 ¥1.32/小时（第三方比价口径）",
+    basis:"共识区间 7.5–8.1；卡型覆盖广、云主机与裸金属档可选",
+    note:"官方称调度 2000+ 台 GPU 服务器，含英伟达全系与多款国产信创卡，提供云主机/容器/裸金属；短板是价格与库存波动大。"
+  },
+  {
+    name:"揽睿星舟", dev:"揽睿星舟（LanRui AI）", cat:"platform",
+    score:7.2, avail:"free",
+    site:{label:"lanrui-ai.com", url:"https://www.lanrui-ai.com/"},
+    free:"新人礼 ¥3.8 算力（约 2 小时 3090 体验券）+ 免费 10G 网盘",
+    price:"RTX 3090 约 ¥1.9/小时（用户实测口径，折合单卡约 ¥1,368/月）",
+    basis:"共识区间 6.9–7.5；新人门槛低、网盘与镜像配套齐全",
+    note:"主打低成本入门，注册礼与免费网盘降低试错成本，控制台集成常用镜像；短板是公开价格信息少、卡型与库存规模偏小。"
+  },
+  {
+    name:"趋动云 VIRTAICLOUD", dev:"趋动科技（VirtAI Tech）", cat:"platform",
+    score:7.6, avail:"free",
+    site:{label:"virtaicloud.com", url:"https://www.virtaicloud.com/"},
+    free:"注册赠算力金（活动口径 168 元 / 70–300 元不等）；最低约 0.49 元/卡时",
+    price:"最低约 ¥0.49/卡时起（折合单卡约 ¥353/月）；按分钟计费",
+    basis:"共识区间 7.3–7.9；OrionX 池化技术、分钟级计费",
+    note:"依托趋动 OrionX 池化技术把异构 GPU 整合为统一资源池，开发环境与训练分钟级计费；短板是免费额度口径多变、高端卡库存不透明。"
+  },
+  {
+    name:"潞晨云 Colossal Cloud", dev:"潞晨科技（Colossal-AI）", cat:"platform",
+    score:7.7, avail:"free",
+    site:{label:"cloud.luchentech.com", url:"https://cloud.luchentech.com/"},
+    free:"新注册赠金 ¥20 起（活动口径）",
+    price:"散租最低约 ¥1.33/GPU/时；H20 NVLINK 96GB 低至 ¥6.88/GPU/时；按分钟计费",
+    basis:"共识区间 7.4–8.0；大模型训练框架生态与推理优化能力强",
+    note:"Colossal-AI 团队运营，主打大模型训练/微调与推理一体，提供高显存 H 系列与并行优化；短板是档位偏贵、个人低价档少。"
+  },
+  {
+    name:"优云智算 Compshare", dev:"优刻得（UCloud）", cat:"share",
+    score:7.9, avail:"paid",
+    site:{label:"compshare.cn", url:"https://www.compshare.cn/"},
+    free:"待确认（平台侧有新人算力券与限时活动）",
+    price:"RTX 3080Ti 约 ¥0.66/小时、3090 约 ¥1.08–1.19/小时、4090 约 ¥2.15/小时、A800 约 ¥6.23–7.36/小时；按秒计费",
+    basis:"共识区间 7.6–8.2；UCloud 体系支撑、卡型与计费档丰富",
+    note:"UCloud 旗下算力平台，官方称万卡规模，覆盖 4090/A100/A800/H 系列，支持按量、包日包月与抢占式；短板是高端卡需预约。"
+  },
+  {
+    name:"Featurize", dev:"成都费特瑞斯科技（Featurize）", cat:"platform",
+    score:7.6, avail:"free",
+    site:{label:"featurize.cn", url:"https://featurize.cn/"},
+    free:"新用户注册赠 1 小时免费时长；附赠免费数据盘（约 750GB 口径）",
+    price:"RTX 3060 约 ¥0.69/小时、3090 约 ¥1.62/小时、4090 约 ¥1.87/小时、V100 约 ¥1.17/小时；支持按量计费与包月，按分钟计费",
+    basis:"共识区间 7.3–7.9；一键镜像与数据盘体验好",
+    note:"面向学生与科研的开箱即用 GPU 云，官方明确 4090 按量低至 ¥1.87/小时并预装主流框架；短板是高端训练卡有限、偶有售罄。"
+  },
+  {
+    name:"无问芯穹 Infini-AI", dev:"无问芯穹（Infinigence AI）", cat:"platform",
+    score:7.5, avail:"paid",
+    site:{label:"cloud.infini-ai.com", url:"https://cloud.infini-ai.com/"},
+    free:"待确认（以活动赠送为主，未公示统一免费额度）",
+    price:"A800 等训练卡按时计费（第三方比价口径约 ¥8/卡时档），活动期有 4.8–5 折",
+    basis:"共识区间 7.2–7.8；异构混训与国产芯片适配见长",
+    note:"以异构云与软硬件协同优化为核心，支持国产与进口 AI 芯片混合训练；短板是公开价格与库存透明度一般，个人档位少。"
+  },
+  {
+    name:"算家云", dev:"算家云（Suanjia Cloud）", cat:"share",
+    score:6.9, avail:"paid",
+    site:{label:"suanjiayun.com", url:"https://suanjiayun.com/"},
+    free:"待确认（以限时活动赠送为主）",
+    price:"RTX 4090 青春版/闲置算力 ¥1.24/卡时起；专业版 4090 ¥1.98/卡时、4090D ¥1.88/卡时（2026-06 降价）；4090×8 裸金属 ¥6,825–7,800/台月；长租 66–72 折",
+    basis:"共识区间 6.6–7.2；低价闲置算力与裸金属供给",
+    note:"以闲置算力与「青春版」低价切入，4090/5090 多卡裸金属并给长租折扣（66–72 折）；短板是关机满 7 天即释放资源与数据盘。"
+  },
+  {
+    name:"阿里云 GPU 云服务器（EGS）", dev:"阿里巴巴（阿里云）", cat:"cloud",
+    score:8.8, avail:"free",
+    site:{label:"aliyun.com", url:"https://www.aliyun.com/product/egs/"},
+    free:"新用户可领取 GPU/PAI 免费试用资源包（额度与时长随活动变化，需实名认证）",
+    price:"L20 实例 gn8is（8 核 64G）¥6,929.25/月；机密计算 gn8v-tee（16 核 96G）¥22,104.35/月；ebmgn9gc（256 核 1536G）¥138,014.00/月；另支持按量、抢占式与预留实例券",
+    basis:"共识区间 8.5–9.0；国内云厂商 GPU 实例供给与生态最全",
+    note:"实例族覆盖 gn7/gn8/gn9 与机密计算，计费方式最全；短板是 2026-04-18 起 AI 算力类涨价约 5%–34%，部分老规格已进入 EOS。"
+  },
+  {
+    name:"腾讯云 GPU 云服务器", dev:"腾讯控股（腾讯云）", cat:"cloud",
+    score:8.6, avail:"paid",
+    site:{label:"cloud.tencent.com", url:"https://cloud.tencent.com/product/gpu/"},
+    free:"待确认（有 GPU 实验室等限时免费/折扣抢购活动，无统一公示额度）",
+    price:"GN10Xp（V100 NVLink 32GB×8，80 核 320G）¥46,000/月；TI-ONE 刊例价 V100×1 ¥13.18/小时、V100×2 ¥26.36/小时、V100×8 ¥105.42/小时；国际站 GN7 按量低至 $0.204/小时",
+    basis:"共识区间 8.3–8.8；V100/T4 供给稳定、按量与包月体系成熟",
+    note:"按量计费实例关机不收费，配套 TI-ONE 训推平台与可切分的渲染型实例；短板是 H100 等最新卡公开报价与可租规模不如国际新云。"
+  },
+  {
+    name:"华为云 GPU 云服务器 / 昇腾", dev:"华为（华为云）", cat:"cloud",
+    score:8.5, avail:"paid",
+    site:{label:"huaweicloud.com", url:"https://www.huaweicloud.com/"},
+    free:"待确认（有 ModelArts 免费体验档与代金券活动，未公示统一 GPU 免费额度）",
+    price:"ModelArts 昇腾 AI 加速型（B1）1 卡按需约 ¥21.72/小时（官方文档示例）；价格计算器 1×snt9b1 ¥18.682/小时、4×snt9b1 ¥74.728/小时、4×snt9b3 ¥135.872/小时；专属资源池按需示例 $0.66/小时",
+    basis:"共识区间 8.2–8.8；昇腾国产算力与 ModelArts 全流程平台",
+    note:"以昇腾 NPU 与 ModelArts 提供国产化算力，公共/专属资源池齐全，政企信创适配最好；短板是英伟达实例公开报价少、以询价为主。"
+  },
+  {
+    name:"火山引擎 GPU 云服务器", dev:"字节跳动（火山引擎）", cat:"cloud",
+    score:8.3, avail:"free",
+    site:{label:"volcengine.com", url:"https://www.volcengine.com/product/gpu"},
+    free:"新用户可申请试用/代金券额度（随活动变化）",
+    price:"ai.gni3cl.20c-120gi（1 GNI3CL，20 vCPU/120GiB）¥18.47/小时、¥8,527.25/月；ai.g1v.8c-32gi（V100×1）¥17.77/小时、¥9,010/月；抢占式实例最高省约 80%",
+    basis:"共识区间 8.0–8.6；与字节内部并池、性价比与 RDMA 网络强",
+    note:"提供 3.2 Tbps RDMA 互联，支持按量、包月、抢占式与弹性预约，抢占式折扣大；短板是价格页分散、部分机型需白名单。"
+  },
+  {
+    name:"百度智能云 GPU 云服务器 / 百舸", dev:"百度（百度智能云）", cat:"cloud",
+    score:8.0, avail:"free",
+    site:{label:"cloud.baidu.com", url:"https://cloud.baidu.com/"},
+    free:"百舸 AI 异构计算平台本身免费，仅按实际使用的计算/PFS/CCR 等资源计费",
+    price:"官网未公示统一价目（具体单价待确认）：GPU 云服务器按小时（按需）与包年包月计费，赠系统盘（Linux 20GB / Windows 40GB）；AI 算力相关产品自 2026-04-18 起上调约 5%–30%，并行文件存储上调约 30%",
+    basis:"共识区间 7.7–8.3；AI 平台全栈与飞桨生态协同",
+    note:"GPU 云服务器配百舸异构平台与 PFS 并行存储，适合飞桨生态团队；短板是 2026 年 4 月涨价后竞争力下降、单价需登录控制台查看。"
+  },
+  {
+    name:"京东云 智算服务 GCS", dev:"京东（京东云）", cat:"cloud",
+    score:7.4, avail:"paid",
+    site:{label:"jdcloud.com", url:"https://www.jdcloud.com/"},
+    free:"待确认（未见统一免费额度公示）",
+    price:"GPU 经典款（单卡）¥1.89/小时、¥42.8/天、¥1,218/月、¥14,616/年；GPU 进阶型 I（单卡）¥2.00/小时、¥45.6/天、¥1,296/月、¥15,552/年",
+    basis:"共识区间 7.1–7.7；定价直接公示、包日包月档清晰",
+    note:"单卡到多卡实例价格按小时/包日/包月直接公示，配套 JoyBuilder 开发平台；短板是卡型与地域覆盖有限，高端训练卡供给不足。"
+  },
+  {
+    name:"UCloud GPU 云主机", dev:"优刻得（UCloud）", cat:"cloud",
+    score:7.3, avail:"paid",
+    site:{label:"ucloud.cn", url:"https://www.ucloud.cn/"},
+    free:"GPU 云主机 9.9 元畅享 24 小时试用；高校新客 1.4 折起",
+    price:"GPU 云主机促销 29.9 元/周起、长期折扣低至 1.4 折；RTX 4090 多卡专区包月约 ¥1,212/月（第三方口径）",
+    basis:"共识区间 7.0–7.6；中立云定位、促销与补贴力度大",
+    note:"中立公有云，预置 Qwen3、DeepSeek 等热门模型镜像，适配训练推理与实时视频应用，另有算力补贴；短板是卡型更新较慢。"
+  },
+  {
+    name:"阿里云 PAI（人工智能平台）", dev:"阿里巴巴（阿里云）", cat:"cloud",
+    score:8.2, avail:"free",
+    site:{label:"help.aliyun.com/zh/pai", url:"https://help.aliyun.com/zh/pai/billing-of-eas"},
+    free:"PAI-DSW / PAI-DLC 提供免费试用额度（CU 规格，随活动调整）",
+    price:"以底层 GPU 实例计价：DLC 支持 gn8is 等 L20 规格按量计费（同规格 EGS 实例公开价约 ¥6,929.25/月，PAI 侧按时/按月单价以控制台为准）；EAS 按实例规格计费（如 ecs.gn7i-c8g1.2xlarge = 8 vCPU + 1×24GB），平台无独立单卡月费",
+    basis:"共识区间 7.9–8.5；国内 AI 平台完整度与 DSW/DLC/EAS 链路",
+    note:"DSW 开发、DLC 训练与 EAS 推理全链路，支持 gn8is(L20) 等新规格，适合团队化 AI 工程；短板是计费项多、免费额度限时限量。"
+  },
+  {
+    name:"百度百舸 AI 异构计算平台", dev:"百度（百度智能云）", cat:"cloud",
+    score:7.6, avail:"free",
+    site:{label:"cloud.baidu.com", url:"https://cloud.baidu.com/"},
+    free:"平台服务免费，仅按实际使用的计算/PFS/CCR/CProm/BLS 资源付费",
+    price:"平台层不单独定价（具体单价待确认），按云服务器、PFS 并行存储、CCR 容器镜像等实际用量计费；自 2026-04-18 起 AI 算力相关产品上调约 5%–30%",
+    basis:"共识区间 7.3–7.9；异构资源调度与训练加速套件",
+    note:"面向企业的大规模异构算力调度与训练平台，配套 PFS 并行存储、CCR 与训练加速套件；短板是不面向个人零售，公开单价颗粒度粗。"
+  },
+  {
+    name:"天翼云 GPU 云主机", dev:"中国电信（天翼云）", cat:"cloud",
+    score:7.3, avail:"paid",
+    site:{label:"ctyun.cn", url:"https://www.ctyun.cn/"},
+    free:"待确认（未公示统一 GPU 免费额度）",
+    price:"待确认（官网未公开 GPU 云主机标准单价，以商务询价与代理商报价为主）",
+    basis:"共识区间 7.0–7.6；央企背景、政企与合规场景适配",
+    note:"中国电信旗下云，GPU 云主机覆盖视频解码、图形渲染与深度学习，弹性主机覆盖全国多数省份；短板是价格不公开、以项目制询价为主。"
+  },
+  {
+    name:"移动云 GPU 云主机", dev:"中国移动（移动云）", cat:"cloud",
+    score:7.1, avail:"paid",
+    site:{label:"ecloud.10086.cn", url:"https://ecloud.10086.cn/"},
+    free:"待确认（GPU 云主机无统一免费额度；同门「九天·毕昇」平台注册赠 1000 算力豆，约合 50 小时 V100）",
+    price:"待确认（GPU 云主机未公开标准单价；同门「九天·毕昇」以算力豆计数消耗）",
+    basis:"共识区间 6.8–7.4；运营商资源与国产卡兼容",
+    note:"提供 AMD S7150 / M40 / P100 / P4 / V100 等多档 GPU 主机，配套云电脑与行业方案；短板是公开计价信息少、以行业客户为主。"
+  },
+  {
+    name:"启智社区 OpenI", dev:"鹏城实验室（OpenI 启智社区）", cat:"free",
+    score:7.0, avail:"free",
+    site:{label:"openi.org.cn", url:"https://openi.org.cn"},
+    free:"免费普惠算力：接入鹏城云脑一号/二号、成都人工智能计算中心、中原人工智能计算中心等；「AI 创作者加速营」最高 4 卡 GPU/NPU/GCU 共享算力 + 100–500GiB 存储 + 最高 10,000 算力积分",
+    price:"¥0（公益普惠算力；openMind 等活动按 4 算力积分/卡时消耗积分，可申请活动积分）",
+    basis:"共识区间 6.7–7.3；国内最完整的免费普惠算力入口",
+    note:"由中国算力网开源开放试验场支撑，提供代码、数据集、训推与免费算力端到端环境，支持昇腾；短板是高峰排队、不适合生产负载。"
+  },
+  {
+    name:"百度飞桨 AI Studio", dev:"百度（飞桨 PaddlePaddle）", cat:"free",
+    score:7.4, avail:"free",
+    site:{label:"aistudio.baidu.com", url:"https://aistudio.baidu.com"},
+    free:"每日运行项目赠 8 点 GPU 算力（V100 16GB 按 0.5 点/小时计，最多 16 小时/天、每周不超过 112 小时）；需实名认证",
+    price:"¥0（免费算力；超出部分以算力卡/付费套餐补充）",
+    basis:"共识区间 7.1–7.7；国内最易获取的持续免费 GPU 额度",
+    note:"面向学习者的免费 GPU 平台，每日运行项目可稳定获 V100 16GB / DCU 16GB 额度并配套课程；短板是单次时长与并发受限。"
+  }
+];
+
+const PRICE_POINTS = [
+  {name:"启智社区 OpenI", x:0, y:7.0, free:true, lp:"right"},
+  {name:"百度飞桨 AI Studio", x:0, y:7.4, free:true, lp:"bottom"},
+  {name:"趋动云", x:353, y:7.6, free:false, lp:"bottom"},
+  {name:"优云智算", x:475, y:7.9, free:false, lp:"top"},
+  {name:"Featurize", x:497, y:7.6, free:false, lp:"bottom"},
+  {name:"恒源云", x:677, y:8.0, free:false, lp:"top"},
+  {name:"智星云", x:792, y:7.8, free:false, lp:"bottom"},
+  {name:"算家云", x:893, y:6.9, free:false, lp:"top"},
+  {name:"矩池云", x:929, y:7.9, free:false, lp:"right"},
+  {name:"潞晨云", x:958, y:7.7, free:false, lp:"bottom"},
+  {name:"京东云 GCS", x:1218, y:7.4, free:false, lp:"top"},
+  {name:"UCloud GPU 云主机", x:1252, y:7.3, free:false, lp:"bottom"},
+  {name:"AutoDL", x:1354, y:8.6, free:true, lp:"top"},
+  {name:"揽睿星舟", x:1368, y:7.2, free:false, lp:"bottom"},
+  {name:"阿里云 EGS", x:3234, y:8.8, free:false, lp:"bottom"},
+  {name:"火山引擎", x:4391, y:8.3, free:false, lp:"top"},
+  {name:"百度智能云", x:5298, y:8.0, free:false, lp:"bottom"},
+  {name:"移动云", x:6858, y:7.1, free:false, lp:"top"},
+  {name:"腾讯云", x:7188, y:8.6, free:false, lp:"left"}
+];
+
+const TIMELINE = [
+  {when:"2024-03-31", what:"Banana.dev 正式关停 Serverless GPU 服务", why:"2024-02-01 公告停止服务，官方建议客户迁移至 Replicate/Modal/Baseten/Cerebrium——算力赛道第一轮出清。", hot:false},
+  {when:"2025-10-30", what:"华为云 ModelArts 昇腾 AI 加速型 B1/B2/B3 降价并转商用", why:"国产 NPU 算力价格下调、从公测转正式商用，新购与续费同步生效。", hot:true},
+  {when:"2026-03-18", what:"阿里云与百度智能云同日宣布 AI 算力涨价", why:"阿里云真武 810E 算力卡相关服务涨 5%–34%、CPFS 智算版存储涨 30%；百度智能云 AI 算力涨约 5%–30%。", hot:true},
+  {when:"2026-04-01 起", what:"阿里云部分 GPU 云服务器规格族进入 EOS 三步流程", why:"2026-04-01 停止老用户扩容、07-01 关闭续费、10-01 正式终止相关规格族服务。", hot:false},
+  {when:"2026-06-18", what:"算家云专业版 4090 降价至 1.98 元/卡时", why:"消费级卡算力租赁的价格战仍在延续，与云厂商涨价方向相反。", hot:false},
+  {when:"2026-09-17", what:"Nebius 公告自 10-01 起上调 H100/H200/B200 价格", why:"H100 由 3.85 上调至 4.50 美元/GPU·小时，全球算力涨价开始向国内传导。", hot:true},
+  {when:"2026-10-01", what:"Nebius 新价格生效；阿里云 GPU 规格族 EOS 正式终止", why:"缩量规格退出与在售规格涨价同步发生，供给端持续收紧。", hot:false},
+  {when:"2026-10-07", what:"AWS 上调所有 GPU Capacity Blocks 价格约 15%", why:"H100/H200 需求持续超供给，头部云与专营新云同步涨价。", hot:true},
+  {when:"2026-10-08", what:"本报告信息口径日", why:"全部价格、库存与免费额度以该日公开信息为准。", hot:false}
+];
+
+const VERIFIED = [
+  {name:"NVIDIA DGX Cloud", verdict:"<span class=\"tag\">已停止对外租赁</span>", note:"2025 年底起 NVIDIA 不再把 DGX Cloud 作为对标超大规模云的公有云运营，业务并入工程组织，不再向新客户提供一方 GPU 租赁；2025 年起相关需求更多由 Lepton 等 GPU 租赁/调度市场承接。"},
+  {name:"Banana.dev", verdict:"<span class=\"tag\">已停服</span>", note:"2024-02-01 公告停止 Serverless GPU 服务，2024-03-31 中午 PST 正式关停，客户被引导迁移至 Replicate / Modal / Baseten / Cerebrium。"},
+  {name:"xAI Colossus 1", verdict:"<span class=\"tag\">非公开算力平台</span>", note:"2026 年 xAI 解散并入 SpaceX，Colossus 1（约 22 万卡 / 300MW）整体出租给 Anthropic；属自有集群整体出租，不向公众零售算力，故不纳入主表。"},
+  {name:"阿里云部分 GPU 云服务器规格族", verdict:"<span class=\"tag\">规格族已终止</span>", note:"2026-04-01 停止老用户扩容、2026-07-01 关闭续费、2026-10-01 正式终止相关规格族服务；系部分规格下线，并非产品线停服，在售规格不受影响。"},
+  {name:"阿里云 PolarDB MySQL GPU 规格", verdict:"<span class=\"tag\">规格已终止</span>", note:"PolarDB MySQL 相关 GPU 规格于 2026-10-19 00:00(UTC+8) 终止服务，属数据库侧规格调整，与 GPU 算力租赁无关，列此以免混淆。"},
+  {name:"Paperspace（DigitalOcean）", verdict:"<span class=\"tag\">已整合（非停服）</span>", note:"2023 年被 DigitalOcean 收购，产品线并入 DigitalOcean GPU Droplets 并在 Paperspace 品牌下继续运营；用户在检索中常误判为已停服，特此说明。"}
+];
+
+const SOURCES = [
+  {p:"AutoDL 算力云", items:[
+    ["官方站点","https://www.autodl.com/","官方入口、平台定位、会员折扣与学生通道"],
+    ["官方站点","https://www.autodl.com/home","在线 GPU/MLU/Ascend 规模（约 2 万卡）与产品定位"],
+    ["比价与社区","https://rentgpu.link/","按小时价格交叉验证（第三方比价站）"]
+  ]},
+  {p:"矩池云 Matpool", items:[
+    ["官方站点","https://www.matpool.com/","官方入口与产品定位"],
+    ["比价与社区","https://blog.csdn.net/dzysunshine/article/details/131103166/","多平台小时价与学生/教师折扣交叉验证"]
+  ]},
+  {p:"恒源云 GPUSHARE", items:[
+    ["官方站点","https://gpushare.com/","官方入口、覆盖省市数、GPU 种类与卡量（49+/2999+）"],
+    ["比价与社区","https://rentgpu.link/","小时价与 1 元档活动口径"]
+  ]},
+  {p:"智星云", items:[
+    ["官方站点","https://ai-galaxy.cn/aboutus","运营主体（亘聪科技/安诺其集团）、2000+ 台 GPU 服务器与国产信创卡"],
+    ["官方文档","https://gpu.ai-galaxy.cn/docs_v2/","云主机/云容器/裸金属/硬件市场四种产品形态与使用流程"],
+    ["比价与社区","https://rentgpu.link/","4090/A100/V100 各档小时价"]
+  ]},
+  {p:"揽睿星舟", items:[
+    ["官方站点","https://www.lanrui-ai.com/","官方入口（多处第三方导航共同指向）"],
+    ["比价与社区","https://openi.cn/sites/35095.html","新人礼 ¥3.8 与免费 10G 网盘口径"],
+    ["比价与社区","https://segmentfault.com/a/1190000044500004","3090 约 ¥1.9/小时 的用户实测口径"]
+  ]},
+  {p:"趋动云 VIRTAICLOUD", items:[
+    ["官方站点","https://www.virtaicloud.com/","官方入口"],
+    ["官方站点","https://virtaitech.com/","OrionX GPU 池化技术与趋动云产品定位"],
+    ["比价与社区","https://rentgpu.link/","0.49 元/卡时起与注册赠算力金口径"]
+  ]},
+  {p:"潞晨云 Colossal Cloud", items:[
+    ["官方站点","https://cloud.luchentech.com/","官方入口与产品定位"],
+    ["比价与社区","https://rentgpu.link/","¥1.33/GPU/时与 H20 NVLINK ¥6.88/GPU/时口径"]
+  ]},
+  {p:"优云智算 Compshare", items:[
+    ["官方站点","https://www.compshare.cn/","官方入口、秒级启动与流体计费口径"],
+    ["官方文档","https://www.compshare.cn/docs/overview/platform/introduce","UCloud 旗下定位、万卡规模与已上线卡型清单"],
+    ["比价与社区","https://blog.csdn.net/qq_25897071/article/details/164370691","3080Ti/3090/4090/A800 各档小时价与按秒计费"]
+  ]},
+  {p:"Featurize", items:[
+    ["官方站点","https://featurize.cn/","官方入口、4090 按量低至 ¥1.87/小时、按需与包月计费"],
+    ["比价与社区","https://rentgpu.link/","各卡型小时价与免费时长口径"]
+  ]},
+  {p:"无问芯穹 Infini-AI", items:[
+    ["官方站点","https://cloud.infini-ai.com/","官方入口与异构云定位"],
+    ["比价与社区","https://rentgpu.link/","A800 档小时价与活动折扣口径"]
+  ]},
+  {p:"算家云", items:[
+    ["官方站点","https://suanjiayun.com/","官方入口与 4090 青春版 1.24 元/卡时起"],
+    ["官方页面","https://www.suanjiayun.com/bareMetal","4090/5090 多卡裸金属台月价与长租折扣"],
+    ["官方公告","https://www.suanjiayun.com/newsdetail?clickIndex=0&newsId=6a32761089681d2da98dd374","2026-06 专业版 4090 降至 1.98 元/卡时"],
+    ["比价与社区","https://rentgpu.link/","价格与活动口径交叉验证"]
+  ]},
+  {p:"阿里云 GPU 云服务器（EGS）", items:[
+    ["官方站点","https://www.aliyun.com/product/egs/","官方入口与 gn8is / gn8v-tee / ebmgn9gc 月付报价"],
+    ["官方文档","https://developer.aliyun.com/article/1767564","L20、机密计算与模型推理实例的月付价格明细"],
+    ["官方文档","https://help.aliyun.com/zh/pai/billing-of-eas","gn7i 系列规格（1×24GB）与 PAI-EAS 计费"],
+    ["官方公告","https://www.aliyun.com/notice/118063","部分 GPU 云服务器规格族 EOS 时间表"]
+  ]},
+  {p:"腾讯云 GPU 云服务器", items:[
+    ["官方站点","https://cloud.tencent.com/product/gpu/","官方入口与 GN10Xp（V100×8）¥46,000/月"],
+    ["官方文档","https://cloud.tencent.com/document/product/851/74108","TI-ONE 刊例价：V100×1 ¥13.18/小时、×8 ¥105.42/小时"],
+    ["官方站点","https://www.tencentcloud.com/products/gpu","国际站按量价（GN7 低至 $0.204/小时）"],
+    ["官方文档","https://cloud.tencent.cn/document/product/1342/50371","GN10Xp 10CU/1GPU 包月 ¥7,188 口径"]
+  ]},
+  {p:"华为云 GPU 云服务器 / 昇腾", items:[
+    ["官方文档","https://support.huaweicloud.com/doslmpnpus-aislt/doslmpnpus_02.html","ModelArts 昇腾 B1 1 卡按需 ¥21.72/小时 与包年费用"],
+    ["官方页面","https://www.huaweicloud.com/pricing/calculator.html?tab=detail#/modelarts","价格计算器：1×snt9b1 ¥18.682/小时、4×snt9b3 ¥135.872/小时"],
+    ["官方公告","https://www.huaweicloud.com/notice/2025/20250930092954881.html","昇腾 B1/B2/B3 于 2025-10-30 降价并转商用"],
+    ["官方文档","https://support.huaweicloud.com/price-modelarts/price-modelarts-0035.html","包年包月与按需两种计费模式口径"]
+  ]},
+  {p:"火山引擎 GPU 云服务器", items:[
+    ["官方站点","https://www.volcengine.com/product/gpu","官方入口、3.2 Tbps RDMA 与 vRDMA 能力"],
+    ["官方文档","https://docs.volcengine.com/docs/86958/2253879?lang=zh","ai.gni3cl 与 ai.g1v 按量/包月价（18.47/8,527.25、17.77/9,010）"],
+    ["官方文档","https://www.volcengine.com/docs/6396/125675","抢占式实例最高省约 80% 的折扣口径"],
+    ["官方文档","https://www.volcengine.com/docs/6396/69812","实例规格、镜像、云盘三类计费项与四种计费方式"]
+  ]},
+  {p:"百度智能云 GPU 云服务器 / 百舸", items:[
+    ["官方文档","https://bce-cdn.bj.bcebos.com/doc/pdf/GPU.zh.pdf","GPU 云服务器包年包月与按需计费规则、赠送系统盘"],
+    ["官方文档","https://bce-cdn.bj.bcebos.com/p3m/pdf/bce-doc/online/AIHC/AIHC.pdf?timeStamp=1748649600081","百舸平台免费、仅按实际资源付费"],
+    ["公开报道","https://www.chinanews.com.cn/cj/2026/03-19/10589212.shtml","2026-04-18 起 AI 算力产品上调 5%–30%"],
+    ["公开报道","https://paper.ce.cn/pc/attachment/202605/08/9a7bf532-8d2d-4389-9f1a-6534ac77176b.pdf","阿里云与百度智能云同日涨价的产品与幅度"]
+  ]},
+  {p:"京东云 智算服务 GCS", items:[
+    ["官方文档","https://docs.jdcloud.com/cn/gcs/pricing","GPU 经典款/进阶型单卡的小时、包日、包月、包年价格"],
+    ["官方文档","https://docs.jdcloud.com/cn/jdaip/create-vm-nodepool","JoyBuilder 云主机节点池与包年包月/按配置计费"]
+  ]},
+  {p:"UCloud GPU 云主机", items:[
+    ["官方站点","https://www.ucloud.cn/","官方入口、GPU 云主机 29.9 元/周与 1.4 折"],
+    ["官方活动页","https://www.ucloud.cn/site/active/gpu.html","9.9 元畅享 24 小时试用、高校新客 1.4 折、算力补贴"],
+    ["比价与社区","https://blog.csdn.net/qq_25897071/article/details/164370691","4090 多卡专区包月 ¥1,212 与优云智算按量价对比"]
+  ]},
+  {p:"阿里云 PAI（人工智能平台）", items:[
+    ["官方文档","https://help.aliyun.com/zh/pai/billing-of-eas","EAS 计费组成与 gn7i 规格（8 核 30G / 1×24GB）"],
+    ["官方文档","https://help.aliyun.com/en/pai/product-overview/billing-of-dlc","DLC 支持的 gn8is（L20）实例规格"]
+  ]},
+  {p:"百度百舸 AI 异构计算平台", items:[
+    ["官方文档","https://bce-cdn.bj.bcebos.com/p3m/pdf/bce-doc/online/AIHC/AIHC.pdf?timeStamp=1748649600081","平台免费、按计算/PFS/CCR/CProm/BLS 资源付费"],
+    ["公开报道","https://36kr.com/p/3735284343963651","百度智能云 2026-04-18 起涨价 5%–30%"]
+  ]},
+  {p:"天翼云 GPU 云主机", items:[
+    ["官方站点","https://www.ctyun.cn/","官方入口与 GPU 云主机产品线"],
+    ["代理商站点","https://www.ctyun31.com/","GPU 云主机覆盖 31 省（代理商口径，仅作线索，不作为官方依据）"]
+  ]},
+  {p:"移动云 GPU 云主机", items:[
+    ["官方站点","https://ecloud.10086.cn/","官方入口"],
+    ["官方页面","https://www.jl.10086.cn/ecloud/product/gpu.html","GPU 云主机支持 AMD S7150/M40/P100/P4/V100 等卡型"],
+    ["用户社区","https://70asunflower.github.io/posts/free-gpu-resources/","九天·毕昇注册赠 1000 算力豆（约 50 小时 V100）"]
+  ]},
+  {p:"启智社区 OpenI", items:[
+    ["官方站点","https://openi.org.cn","官方入口、中国算力网（C²NET）与接入算力中心"],
+    ["官方公告","https://openi.org.cn/html/2022/dongtai_0628/634.html","接入鹏城云脑一号/二号、成都与中原智算中心"],
+    ["官方活动页","https://www.openi.org.cn/event/aicreator-202601.html","AI 创作者加速营：4 卡共享算力、100–500GiB 存储、最高 10,000 算力积分"],
+    ["官方页面","https://openi.org.cn/index.php?m=content&c=index&a=lists&catid=276","昇腾算力按 4 算力积分/卡时消耗"]
+  ]},
+  {p:"百度飞桨 AI Studio", items:[
+    ["官方站点","https://aistudio.baidu.com","官方入口与免费算力规则"],
+    ["公开报道","https://g.pconline.com.cn/ai/product/4790.html","每日 8 点 GPU 算力、V100 16GB 0.5 点/小时口径"],
+    ["高校通知","https://xycx.hyit.edu.cn/info/1174/3415.htm","每日最多 16 小时、每周 112 小时的额度上限"]
+  ]},
+  {p:"排除清单与行业横评", items:[
+    ["官方公告","https://www.banana.dev/blog/sunset","Banana.dev 停止 Serverless GPU 并关停的时间"],
+    ["百科/资料","https://aiwiki.ai/wiki/nvidia_dgx_cloud","NVIDIA DGX Cloud 不再对外租赁一方的说明"],
+    ["官方公告","https://www.aliyun.com/notice/118680","PolarDB MySQL GPU 规格 2026-10-19 终止"],
+    ["比价与社区","https://gpuperhour.com/","31 家云 GPU 价格目录（海外交叉验证）"],
+    ["比价与社区","https://cloudgpuprices.com/","云 GPU 价格与 Verified 日期标注"],
+    ["公开报道","https://www.marktechpost.com/2026/08/23/best-gpu-neoclouds-2026/amp/","2026 GPU 新云横评（CoreWeave/Nebius/Lambda/Crusoe）"]
+  ]}
+];
+
+const TODOS = [
+  ["AutoDL 官方价格与免费额度","4090/A100 小时价为第三方比价口径，注册赠送金额与会员折扣规则未在官方页面取到统一文本，需以控制台实价为准。"],
+  ["矩池云 Matpool","现版官网未公示免费额度与学生/教师折扣的确切比例，折扣体系来自第三方整理。"],
+  ["智星云","官网未公示统一免费额度；4090/A100/V100 各档小时价为第三方比价口径。"],
+  ["揽睿星舟","3090 ¥1.9/小时为 2023—2024 年用户实测口径，官网价格页未取得，需以控制台实价为准。"],
+  ["趋动云","注册赠算力金的具体金额与有效期随活动变化（168 元/70 元/300 元等口径不一），0.49 元/卡时为最低档口径，均需以官网活动页为准。"],
+  ["潞晨云","新注册赠金 ¥20 为活动口径；H20 NVLINK 96GB 的 ¥6.88/GPU/时属限时价，需确认当前是否仍生效。"],
+  ["优云智算","新人算力券与限时活动未公示统一额度；A800 档 ¥6.23 与 ¥7.36 两个口径并存，需以控制台为准。"],
+  ["Featurize","免费时长与免费数据盘容量（约 750GB）为第三方口径，官网首页仅公示按量价格。"],
+  ["无问芯穹 Infini-AI","公开价格透明度低，A800 档小时价与 4.8–5 折活动均为第三方口径，需官方确认。"],
+  ["算家云","「青春版/闲置算力」与「专业版」的价格与算力质量差异未在官方文档中明确说明，需咨询客服确认。"],
+  ["阿里云 EGS / PAI","部分 GPU 规格族的 EOS 安排与替代规格映射未完整公开；PAI 免费试用额度随活动变化，无统一公示。"],
+  ["腾讯云 GPU 云服务器","免费额度未公示；H100/H200 等最新训练卡是否开放按量租用与公开报价未取得官方口径。"],
+  ["华为云 GPU（英伟达）实例","公开报价以昇腾 NPU 为主，英伟达 GPU 加速型实例需以价格计算器/询价为准，缺少可比单价。"],
+  ["火山引擎 GPU 云服务器","公开价格页分散，部分 GPU 机型需开通白名单；ai.gni3cl 与 ai.g1v 之外的机型价格未取得。"],
+  ["京东云 智算服务 GCS","GPU 经典款与进阶型 I 对应的具体显卡型号未在定价页标注，需在购买页确认。"],
+  ["天翼云 GPU 云主机","官网未公开 GPU 云主机标准单价，仅有代理商报价线索；官方价格需商务询价。"],
+  ["移动云 GPU 云主机","GPU 云主机未公开标准单价与免费额度；九天·毕昇的算力豆有效期（约 7 天）与兑换规则需以官网为准。"],
+  ["百度百舸","无独立定价页，需按云服务器/PFS/CCR 等资源清单核算，缺少可直接比较的单价。"],
+  ["海外新云价格口径","Fluidstack、Akash、Together AI 等海外产品的部分价格为第三方比价或媒体口径，官方价格页存在动态调整，需以官网为准。"]
+];
+
+/* ================= 渲染：总表 ================= */
+const CAT = {platform:'第三方算力平台', cloud:'云厂商 GPU 实例', share:'共享与分布式算力', free:'免费普惠算力'};
+const CAT_TAG = {platform:'cat-video', cloud:'cat-live', share:'cat-clone', free:'cat-interactive'};
+const tableEl = document.getElementById('mainTable');
+PRODUCTS.forEach(function(p){
+  const availTag = p.avail === 'free'
+    ? '<span class="tag free">含免费额度</span>'
+    : '<span class="tag paid">付费开通</span>';
+  const catTag = '<span class="tag ' + CAT_TAG[p.cat] + '">' + CAT[p.cat] + '</span>';
+  const scoreHtml = (p.score === null)
+    ? '<span class="score na">—</span>'
+    : '<span class="score">' + p.score.toFixed(1) + '</span>';
+  const priceHtml = p.price + (p.cny ? '<span class="note-inline" style="display:block;margin-top:3px">' + p.cny + '</span>' : '');
+  const tr = document.createElement('tr');
+  tr.innerHTML =
+    '<td data-label="产品 / 开发方"><span class="pname">' + p.name + '</span><span class="dev">' + p.dev + '</span><span style="display:block;margin-top:6px">' + catTag + availTag + '</span></td>' +
+    '<td data-label="评分">' + scoreHtml + '</td>' +
+    '<td data-label="评分依据"><span class="basis">' + p.basis + '</span></td>' +
+    '<td data-label="官方入口"><a class="ext" href="' + p.site.url + '">' + p.site.label + '</a></td>' +
+    '<td data-label="免费额度">' + p.free + '</td>' +
+    '<td data-label="价格">' + priceHtml + '</td>' +
+    '<td data-label="特点与局限">' + p.note + '</td>';
+  tableEl.appendChild(tr);
+});
+document.getElementById('tableCaption').textContent =
+  '注：评分为主观共识评分（满分 10），非厂商官方指标。价格与免费额度均以 2026-10-08 公开信息为准；标注「待确认」表示本轮未取得可靠官方口径。';
+
+/* ================= 渲染：时间线 ================= */
+const tlEl = document.getElementById('timeline');
+TIMELINE.forEach(function(t){
+  var d = document.createElement('div');
+  d.className = 'tnode' + (t.hot ? ' hot' : '');
+  d.innerHTML = '<div class="when">' + t.when + '</div><div class="axis"><i class="dot"></i></div>' +
+                '<div class="body"><p class="what">' + t.what + '</p><p class="why">' + t.why + '</p></div>';
+  tlEl.appendChild(d);
+});
+
+/* ================= 渲染：核验表 ================= */
+const vEl = document.getElementById('verifyTable');
+VERIFIED.forEach(function(v){
+  var tr = document.createElement('tr');
+  tr.innerHTML = '<td data-label="厂商 / 产品"><span class="pname">' + v.name + '</span></td>' +
+                 '<td data-label="核验结论">' + v.verdict + '</td>' +
+                 '<td data-label="说明">' + v.note + '</td>';
+  vEl.appendChild(tr);
+});
+
+/* ================= 渲染：信源索引 ================= */
+const srcEl = document.getElementById('sourceIndex');
+SOURCES.forEach(function(g){
+  var h = document.createElement('div');
+  h.className = 'srcgrp';
+  var rows = g.items.map(function(it){
+    var link = /^https?:/.test(it[1]) ? '<a class="ext" href="' + it[1] + '">' + it[1] + '</a>' : it[1];
+    link = link.replace(/・/g, '<br>');
+    return '<li class="srcitem">' +
+           '<span class="srclabel">' + it[0] + '</span>' +
+           '<span class="srcbody">' + link +
+           '<span class="srcfield">支撑字段：' + it[2] + '</span></span></li>';
+  }).join('');
+  h.innerHTML = '<h3>' + g.p + '</h3><ul class="srclist">' + rows + '</ul>';
+  srcEl.appendChild(h);
+});
+
+/* ================= 渲染：待确认 ================= */
+const todoEl = document.getElementById('todoList');
+TODOS.forEach(function(t, i){
+  var d = document.createElement('div');
+  d.className = 't';
+  d.innerHTML = '<div class="n">' + (i + 1) + '</div><div class="c"><b>' + t[0] + '：</b>' + t[1] + '</div>';
+  todoEl.appendChild(d);
+});
+
+/* ================= ECharts ================= */
+var C = {primary:'#12564C', accent:'#C4762A', ink:'#1F2329', ink2:'#646A73', ink3:'#8A939B', line:'#DEE3E8'};
+var CAT_COLOR = {platform:'#12564C', cloud:'#C4762A', share:'#4E7BA6', free:'#7C8A5A'};
+var FONT = '"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif';
+
+function renderScore(){
+  var el = document.getElementById('chartScore');
+  if(!el || typeof echarts === 'undefined') return;
+  var data = PRODUCTS.filter(function(p){return p.score !== null;})
+                     .slice().sort(function(a,b){return a.score - b.score;});
+  var chart = echarts.init(el);
+  chart.setOption({
+    grid:{left:8, right:72, top:18, bottom:34, containLabel:true},
+    tooltip:{
+      trigger:'axis', axisPointer:{type:'shadow'},
+      backgroundColor:'#fff', borderColor:C.line, borderWidth:1,
+      textStyle:{color:C.ink, fontFamily:FONT, fontSize:14},
+      formatter:function(ps){
+        var i = ps[0].dataIndex, p = data[i];
+        return '<b>' + p.name + '</b><br/>综合评分：' + p.score.toFixed(1) + ' / 10<br/>品类：' + CAT[p.cat] +
+               '<br/>开发者：' + p.dev + '<br/>评分依据：' + p.basis;
+      }
+    },
+    xAxis:{
+      type:'value', min:0, max:10, splitNumber:5,
+      axisLine:{show:false}, axisTick:{show:false},
+      splitLine:{lineStyle:{color:'#EDF1F4'}},
+      axisLabel:{color:C.ink3, fontFamily:FONT, fontSize:13}
+    },
+    yAxis:{
+      type:'category',
+      data:data.map(function(p){return p.name;}),
+      axisLine:{show:false}, axisTick:{show:false},
+      axisLabel:{color:C.ink, fontFamily:FONT, fontSize:13.5}
+    },
+    series:[{
+      type:'bar', barWidth:'58%',
+      data:data.map(function(p){
+        return {
+          value:p.score,
+          itemStyle:{color:CAT_COLOR[p.cat], borderRadius:[0,3,3,0]}
+        };
+      }),
+      label:{
+        show:true, position:'right', fontFamily:FONT, fontSize:13.5,
+        fontWeight:'bold', color:C.ink, formatter:function(ps){return ps.value.toFixed(1);}
+      }
+    }]
+  });
+  window.addEventListener('resize', function(){chart.resize();});
+}
+
+function renderPrice(){
+  var el = document.getElementById('chartPrice');
+  if(!el || typeof echarts === 'undefined' || !PRICE_POINTS.length) return;
+  var chart = echarts.init(el);
+  chart.setOption({
+    grid:{left:8, right:40, top:26, bottom:56, containLabel:true},
+    tooltip:{
+      trigger:'item',
+      backgroundColor:'#fff', borderColor:C.line, borderWidth:1,
+      textStyle:{color:C.ink, fontFamily:FONT, fontSize:14},
+      formatter:function(ps){
+        var d = ps.data, v = d.value;
+        return '<b>' + d.name + '</b><br/>最低付费月费：' + (v[0] === 0 ? '0（完全免费）' : '¥' + v[0] + '/月') +
+               '<br/>综合评分：' + v[1].toFixed(1);
+      }
+    },
+    xAxis:{
+      type:'value', min:-200, max:8000,
+      axisLine:{lineStyle:{color:C.line}}, axisTick:{show:false},
+      splitLine:{lineStyle:{color:'#EDF1F4'}},
+      axisLabel:{color:C.ink3, fontFamily:FONT, fontSize:13, formatter:'{value}'},
+      name:'最低付费月费（元）', nameLocation:'middle', nameGap:34,
+      nameTextStyle:{color:C.ink2, fontFamily:FONT, fontSize:13}
+    },
+    yAxis:{
+      type:'value', min:6.4, max:9.2, splitNumber:5,
+      axisLine:{show:false}, axisTick:{show:false},
+      splitLine:{lineStyle:{color:'#EDF1F4'}},
+      axisLabel:{color:C.ink3, fontFamily:FONT, fontSize:13},
+      name:'综合评分', nameTextStyle:{color:C.ink2, fontFamily:FONT, fontSize:13}
+    },
+    series:[{
+      type:'scatter',
+      symbolSize:16,
+      data:PRICE_POINTS.map(function(p){
+        return {
+          name:p.name,
+          value:[p.x, p.y],
+          free:p.free,
+          label:{position:p.lp, distance:10}
+        };
+      }),
+      itemStyle:{
+        color:function(ps){return ps.data.free ? C.primary : C.accent;},
+        borderColor:'#fff', borderWidth:1.5
+      },
+      label:{
+        show:true, fontFamily:FONT, fontSize:12.5, color:C.ink,
+        formatter:function(ps){return ps.data.name;}
+      },
+      markLine:{
+        silent:true, symbol:'none',
+        lineStyle:{color:C.primary, type:'dashed', width:1, opacity:.55},
+        label:{show:true, position:'insideEndTop', fontFamily:FONT, fontSize:12, color:C.primary,
+               formatter:'完全免费区'},
+        data:[{xAxis:0}]
+      }
+    }]
+  });
+  window.addEventListener('resize', function(){chart.resize();});
+}
+
+renderScore();
+renderPrice();
+</script>
+
+</main>
+
+</body>
+</html>
