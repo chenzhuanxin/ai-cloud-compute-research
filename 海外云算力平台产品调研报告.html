@@ -1,0 +1,911 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>海外云算力平台产品调研（2026 年 10 月）</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%2312564C'/%3E%3Ccircle cx='13' cy='13' r='5' fill='none' stroke='%23fff' stroke-width='2.2'/%3E%3Cpath d='M10.5 22.5c1.4-2 3.1-3 5-3s3.6 1 5 3' fill='none' stroke='%23C4762A' stroke-width='2.2' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&display=swap">
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js"></script>
+<style>
+:root{
+  --ink:#1F2329;
+  --ink-2:#646A73;
+  --ink-3:#8A939B;
+  --line:#DEE3E8;
+  --line-2:#EDF1F4;
+  --primary:#12564C;
+  --primary-soft:#E8F0EE;
+  --accent:#C4762A;
+  --accent-soft:#FAEFE3;
+  --bg:#FFFFFF;
+  --bg-soft:#F7F9FA;
+  --serif:"Noto Serif SC","Songti SC",Georgia,"Microsoft YaHei",serif;
+  --sans:"Noto Sans SC","PingFang SC","Microsoft YaHei",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--sans);font-weight:400;font-size:16px;line-height:1.78;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+
+/* ===== 报头 ===== */
+.masthead{border-bottom:2px solid var(--ink);padding:56px 0 22px;margin-bottom:0;}
+.kicker{
+  font-size:13px;letter-spacing:.14em;color:var(--primary);
+  font-weight:700;margin:0 0 18px;text-transform:none;
+}
+h1.title{
+  font-family:var(--serif);font-weight:900;
+  font-size:clamp(28px,4.6vw,50px);line-height:1.22;letter-spacing:-.01em;
+  margin:0 0 16px;max-width:20em;
+}
+.subtitle{font-size:17px;color:var(--ink-2);margin:0 0 26px;max-width:44em;line-height:1.7;}
+.meta-row{
+  display:flex;flex-wrap:wrap;gap:10px 34px;font-size:13.5px;color:var(--ink-2);
+  border-top:1px solid var(--line);padding-top:14px;
+}
+.meta-row b{color:var(--ink);font-weight:700;}
+
+.strip{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+  border-bottom:1px solid var(--line);margin-bottom:0;
+}
+.strip .cell{padding:22px 22px 22px 0;border-right:1px solid var(--line-2);}
+.strip .cell:last-child{border-right:0;}
+.strip .num{
+  font-family:var(--serif);font-weight:700;font-size:clamp(22px,3.1vw,34px);
+  color:var(--primary);line-height:1.1;font-variant-numeric:tabular-nums;
+}
+.strip .lbl{font-size:13px;color:var(--ink-2);margin-top:7px;line-height:1.55;}
+
+/* ===== 章节 ===== */
+section{padding:54px 0 8px;border-bottom:1px solid var(--line-2);}
+section:last-of-type{border-bottom:0;}
+h2.sec{
+  font-family:var(--serif);font-weight:700;font-size:clamp(21px,2.6vw,28px);
+  margin:0 0 8px;line-height:1.3;display:flex;gap:14px;align-items:baseline;
+}
+h2.sec .no{
+  font-size:13px;font-weight:700;color:var(--accent);letter-spacing:.08em;
+  font-variant-numeric:tabular-nums;flex:none;padding-top:6px;
+}
+.lede{font-size:16.5px;color:var(--ink-2);max-width:46em;margin:0 0 26px;line-height:1.8;}
+p{margin:0 0 16px;}
+h3{font-family:var(--serif);font-weight:600;font-size:18.5px;margin:30px 0 12px;}
+
+/* ===== 表格 ===== */
+.tablewrap{overflow-x:auto;margin:0 0 10px;border:1px solid var(--line);}
+table{border-collapse:collapse;width:100%;table-layout:fixed;min-width:1120px;}
+thead th{
+  background:var(--bg-soft);text-align:left;font-weight:700;font-size:13.5px;
+  color:var(--ink-2);padding:12px 14px;border-bottom:1px solid var(--line);
+  vertical-align:bottom;line-height:1.5;
+}
+tbody td{
+  padding:14px;border-bottom:1px solid var(--line-2);vertical-align:top;
+  font-size:14px;line-height:1.68;overflow-wrap:anywhere;
+}
+tbody tr:last-child td{border-bottom:0;}
+tbody tr:hover{background:#FCFDFD;}
+.pname{font-weight:700;font-size:14.5px;}
+.dev{display:block;color:var(--ink-3);font-size:12.5px;margin-top:3px;line-height:1.5;}
+.score{
+  font-family:var(--serif);font-weight:700;font-size:19px;color:var(--primary);
+  font-variant-numeric:tabular-nums;display:block;
+}
+.score.na{color:var(--ink-3);font-size:15px;}
+.basis{display:block;color:var(--ink-3);font-size:12px;margin-top:5px;line-height:1.55;}
+a{color:var(--primary);text-decoration:none;border-bottom:1px solid rgba(18,86,76,.35);}
+a:hover{border-bottom-color:var(--primary);}
+a.ext::after{content:"↗";font-size:.78em;vertical-align:.18em;margin-left:2px;color:var(--ink-3);}
+.note-inline{color:var(--ink-3);font-size:12.5px;}
+.tag{
+  display:inline-block;font-size:12px;font-weight:700;line-height:1.5;
+  padding:1px 8px;border:1px solid var(--line);color:var(--ink-2);
+  background:var(--bg-soft);margin-bottom:6px;margin-right:4px;
+}
+.tag.cat-video{color:#0E4A41;background:#E8F0EE;border-color:#C9DCD6;}
+.tag.cat-live{color:#7A4712;background:var(--accent-soft);border-color:#E7D2B8;}
+.tag.cat-clone{color:#1F4E79;background:#E8EFF5;border-color:#C9D8E6;}
+.tag.cat-interactive{color:#4C5636;background:#EFF1E6;border-color:#D5DAC4;}
+.tag.free{color:#fff;background:var(--primary);border-color:var(--primary);}
+.tag.paid{color:#7A4712;background:var(--accent-soft);border-color:#E7D2B8;}
+ul.tight{margin:0;padding-left:18px;}
+ul.tight li{margin-bottom:5px;}
+
+/* ===== 图表 ===== */
+.chart-card{border:1px solid var(--line);padding:22px 20px 12px;margin:0 0 10px;background:var(--bg);}
+.chart-title{font-family:var(--serif);font-weight:600;font-size:16.5px;margin:0 0 4px;}
+.chart-sub{font-size:13px;color:var(--ink-2);margin:0 0 14px;line-height:1.62;}
+.chart{width:100%;height:520px;}
+.chart.tall{height:640px;}
+.caption{font-size:12.5px;color:var(--ink-3);line-height:1.7;margin:6px 0 0;}
+
+/* ===== 结论块 ===== */
+.findings{display:grid;grid-template-columns:repeat(3,1fr);gap:0;border-top:1px solid var(--line);}
+.findings .f{padding:24px 24px 8px 0;border-right:1px solid var(--line-2);}
+.findings .f:last-child{border-right:0;padding-right:0;}
+.findings .f .t{font-family:var(--serif);font-weight:700;font-size:16.5px;margin:0 0 8px;line-height:1.5;}
+.findings .f p{font-size:14px;color:var(--ink-2);line-height:1.72;margin:0;}
+
+/* ===== 时间线 ===== */
+.timeline{margin:6px 0 0;position:relative;}
+.timeline::before{
+  content:"";position:absolute;top:11px;bottom:11px;
+  left:116.5px;width:1px;background:var(--line);
+}
+.tnode{display:grid;grid-template-columns:104px 26px 1fr;align-items:start;}
+.tnode .when{
+  font-size:13px;font-weight:700;color:var(--primary);text-align:right;
+  padding-right:10px;line-height:22px;font-variant-numeric:tabular-nums;
+}
+.tnode .axis{display:flex;justify-content:center;}
+.tnode .dot{position:relative;z-index:1;width:10px;height:10px;border-radius:50%;background:#fff;border:2px solid var(--primary);margin-top:6px;}
+.tnode.hot .dot{background:var(--accent);border-color:var(--accent);}
+.tnode .body{padding:0 0 22px 14px;}
+.tnode:last-child .body{padding-bottom:0;}
+.tnode .what{font-weight:700;font-size:15px;margin:0 0 3px;line-height:1.55;}
+.tnode .why{font-size:14px;color:var(--ink-2);margin:0;line-height:1.7;}
+
+/* ===== 待确认 ===== */
+.todo{border-top:1px solid var(--line);}
+.todo .t{display:grid;grid-template-columns:34px 1fr;gap:12px;padding:14px 0;border-bottom:1px solid var(--line-2);}
+.todo .t .n{font-family:var(--serif);font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums;font-size:15px;}
+.todo .t .c{font-size:14px;line-height:1.72;color:var(--ink);}
+.todo .t .c b{font-weight:700;}
+
+/* ===== 信源索引 ===== */
+.srcgrp{margin-bottom:28px;}
+.srcgrp h3{margin-top:0;}
+.srclist{margin:0;padding:0;}
+.srcitem{display:grid;grid-template-columns:112px 1fr;gap:12px;margin-bottom:12px;list-style:none;}
+.srclabel{font-size:12.5px;color:var(--ink-3);font-weight:700;line-height:1.6;}
+.srcbody{font-size:14px;line-height:1.7;overflow-wrap:anywhere;}
+.srcfield{display:block;margin-top:2px;font-size:12.5px;color:var(--ink-3);}
+
+footer{padding:34px 0 56px;color:var(--ink-3);font-size:13px;line-height:1.8;}
+footer b{color:var(--ink-2);}
+
+@media (max-width:960px){
+  .strip{grid-template-columns:repeat(2,1fr);}
+  .strip .cell:nth-child(2){border-right:0;}
+  .strip .cell{border-bottom:1px solid var(--line-2);padding-right:16px;}
+  .strip .cell:nth-child(3),.strip .cell:nth-child(4){border-bottom:0;}
+  .findings{grid-template-columns:1fr;}
+  .findings .f{border-right:0;border-bottom:1px solid var(--line-2);padding:20px 0 14px;}
+  .findings .f:last-child{border-bottom:0;}
+  .tablewrap{border:0;overflow:visible;}
+  table{min-width:0;table-layout:auto;display:block;}
+  thead{display:none;}
+  tbody{display:block;}
+  tbody tr{display:block;border:1px solid var(--line);margin-bottom:14px;padding:4px 0;}
+  tbody td{display:grid;grid-template-columns:88px 1fr;gap:10px;border-bottom:1px solid var(--line-2);padding:10px 14px;font-size:13.5px;}
+  tbody td:last-child{border-bottom:0;}
+  tbody td::before{
+    content:attr(data-label);font-size:12.5px;color:var(--ink-3);font-weight:700;line-height:1.6;
+  }
+  .chart{height:640px;}
+  .chart.tall{height:840px;}
+  .tnode{grid-template-columns:78px 20px 1fr;}
+  .tnode .when{font-size:12px;padding-right:7px;}
+  .tnode .body{padding-left:10px;}
+  .timeline::before{left:87.5px;}
+  .meta-row{font-size:14px;}
+  .strip .lbl{font-size:13.5px;}
+  .findings .f p{font-size:14.5px;}
+  tbody td{font-size:14.5px;grid-template-columns:98px 1fr;}
+  tbody td::before{font-size:13px;}
+  .dev{font-size:14px;}
+  .tablewrap a.ext{display:inline-block;padding:10px 0;}
+  .srcitem{grid-template-columns:1fr;gap:2px;}
+  .srclabel{font-size:13px;}
+  .srcbody{font-size:14.5px;}
+  .kicker{font-size:14px;}
+  .strip .lbl{font-size:14px;}
+  .tag{font-size:14px;}
+  h2.sec .no{font-size:14px;}
+}
+@media (max-width:520px){
+  .wrap{padding:0 16px;}
+  .chart{height:720px;}
+  .tnode{grid-template-columns:66px 16px 1fr;}
+  .timeline::before{left:73.5px;}
+}
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="wrap">
+    <p class="kicker">云算力平台调研 · 海外（非中国大陆）· 2026 年 10 月口径</p>
+    <h1 class="title">海外云算力平台产品调研</h1>
+    <p class="subtitle">覆盖第三方算力平台（含 GPU 专营新云与托管开发平台）、云厂商 GPU 实例、共享与分布式算力三类共 19 个在营产品（海外无免费普惠档）：用什么卡、按什么单位计价、免费用多少、上下机与排队怎么算。国内产品由另一份报告覆盖，此处仅在核验章节作为对照出现。所有数字与网址均附可追溯来源。</p>
+    <div class="meta-row">
+      <span>数据口径：<b>截至 2026-10-08</b></span>
+      <span>计价货币：<b>USD（约合人民币 1 USD≈7.1 CNY）</b></span>
+      <span>信源交叉：<b>官方站点 / 官方文档 / 比价与横评站点</b></span>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="strip">
+    <div class="cell"><div class="num">19</div><div class="lbl">可评分在营产品</div></div>
+    <div class="cell"><div class="num">2</div><div class="lbl">含免费额度或免费试用</div></div>
+    <div class="cell"><div class="num">$101–1,080</div><div class="lbl">单卡最低月费门槛区间（约 ¥716–7,668）</div></div>
+    <div class="cell"><div class="num">3</div><div class="lbl">覆盖供给类型数</div></div>
+  </div>
+</div>
+
+<main class="wrap">
+
+<section>
+  <h2 class="sec"><span class="no">01</span>核心结论</h2>
+  <p class="lede">海外云算力供给已经分成四条互不重叠的产品线：新云（CoreWeave、Lambda、Crusoe、Nebius 等以裸金属 GPU 集群为主）、头部云厂商（AWS/Azure/GCP 的 GPU 实例）、分布式与撮合市场（Vast.ai、TensorDock、Salad、Akash、io.net）、托管开发平台（RunPod、Paperspace/DigitalOcean）。质量分层清晰、价格带从每小时 0.02 美元延伸到每小时 12.29 美元，免费额度普遍很小甚至没有。</p>
+  <div class="findings">
+    <div class="f"><p class="t">同一个 H100，各家挂牌价相差 4 倍以上</p><p>2026-10-02 的公开挂牌价对比显示：RunPod 的 H100 为 $3.49/GPU·小时，Azure 同款芯片为 $12.29/GPU·小时，超大规模云相对新云中位数的挂牌溢价约 2.93 倍；分布式市场的 H100 甚至低至 $0.90。价差不来自芯片，而来自互联（NVLink/InfiniBand）、合规、配额保障与合约期限——比价前必须先对齐「卡型形态 + 计费方式 + 是否预留」。</p></div>
+    <div class="f"><p class="t">计费粒度成为核心竞争力：按秒、按分钟、按微秒都在出现</p><p>分布式与撮合市场普遍做到按秒甚至按微秒计费（Vast.ai、Salad、TensorDock），新云以按分钟或按秒为主（Crusoe、JarvisLabs、Lambda），而头部云仍以按小时/整机与预留合约为主。粒度越细，越适合实验与间歇负载；粒度越粗，越需要预留与承诺来换取折扣。RunPod 用 Secure/Community 双轨把「便宜但不稳」与「稳但更贵」明确分开，是这一轮产品设计里最有代表性的一步。</p></div>
+    <div class="f"><p class="t">2026 年 3 月起，涨价从新云传导到头部云</p><p>Nebius 于 2026-09-17 公告自 10-01 起把 H100 由 $3.85 上调至 $4.50/GPU·小时（+17%）、H200 由 $4.50 升至 $5.40、B200 由 $7.15 升至 $8.50；AWS 于 2026-10-07 上调全部 GPU Capacity Blocks 约 15%。同期 2026 GPU 新云横评的评价维度已从单价转向「已签约电力」与集群规模——算力竞争正在变成能源与资本竞争，低价窗口在收窄。</p></div>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">02</span>产品字段总表</h2>
+  <p class="lede">同一行回答同一组问题：谁在运营、属于哪一类算力供给、去哪开通、免费用多少、按什么价格卖（海外产品以 USD 原值报价并附约合人民币）、能力与短板在哪。评分为主观共识评分，非厂商指标。</p>
+  <div class="tablewrap">
+    <table>
+      <colgroup>
+        <col style="width:15%"><col style="width:7%"><col style="width:13%">
+        <col style="width:12%"><col style="width:17%"><col style="width:16%"><col style="width:20%">
+      </colgroup>
+      <thead>
+        <tr>
+          <th>产品 / 开发方</th>
+          <th>评分</th>
+          <th>评分依据</th>
+          <th>官方入口</th>
+          <th>免费额度</th>
+          <th>价格</th>
+          <th>特点与局限</th>
+        </tr>
+      </thead>
+      <tbody id="mainTable">
+      </tbody>
+    </table>
+  </div>
+  <p class="caption" id="tableCaption"></p>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">03</span>综合质量评分对比</h2>
+  <p class="lede">评分为主观共识评分，综合官方公开信息、行业比价与横评站点以及开发者社区口碑给出，满分 10 分。评估维度：可用算力规模与卡型代际覆盖、计价粒度与价格竞争力、自助开通与配额/充值门槛、稳定性与可中断性、企业级合规与生态完备度；三类供给（第三方算力平台 / 云厂商 GPU 实例 / 共享与分布式算力）按各自核心维度加权，跨类不宜直接横向比较。</p>
+  <div class="chart-card">
+    <p class="chart-title">（19）个海外云算力产品的综合质量评分（满分 10）</p>
+    <p class="chart-sub">颜色区分供给类型：深青为第三方算力平台（含 GPU 专营新云与托管开发平台），赭色为云厂商 GPU 实例，蓝为共享与分布式算力；海外没有免费普惠档，故图中无橄榄色条目。</p>
+    <div class="chart tall" id="chartScore"></div>
+    <p class="caption">数据口径：2026-10-08。评分非厂商官方指标，也不等同于性能基准测试；单价高低受卡型形态与合约方式影响，不与评分构成因果。</p>
+  </div>
+  <p>第一梯队是 AWS EC2（9.0）、Microsoft Azure（8.8）与 Google Cloud（8.7），紧随其后的是 CoreWeave（8.6）与 RunPod（8.5）：前者代表全球覆盖、合规与配额保障的上限，后者代表专营集群与自助体验的上限。7.6—8.4 是「单点强、规模或生态待补」的中间层（Lambda 8.4、Nebius 8.2、Together AI 8.1、Crusoe 8.0、JarvisLabs 7.9、Hyperstack 7.8、Genesis 7.6）。评分差异主要来自「算力规模与卡型代际」和「稳定性与合规」两项，单价本身权重有限——这也是为什么 Vast.ai（7.7）与 Salad（6.9）价格最低却排在中后段。需要提示：四类供给不可直接互比——分布式市场考的是价格下限，头部云考的是合规与保障，同分不代表同一能力。</p>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">04</span>价格与免费额度的位置</h2>
+  <p class="lede">把「单卡最低月费门槛」和「综合评分」放在同一坐标系，看低价档、专营新云与头部云的分布规律。</p>
+  <div class="chart-card">
+    <p class="chart-title">单卡最低月费门槛与综合评分的关系</p>
+    <p class="chart-sub">横轴为可查证的单卡最低月费门槛（元/月，按该平台最低档单卡时价 × 720 小时折算，美元按 1 USD≈7.1 CNY 换算），纵轴为综合评分。口径无法折算者不纳入本图。</p>
+    <div class="chart" id="chartPrice"></div>
+    <p class="caption">横轴上限 ¥9,000：单卡折算月费超过上限的条目（Nebius RTX PRO 6000 约 ¥9,202、Hyperstack H100 NVLink 约 ¥13,293、Together AI H100 约 ¥20,404）超出坐标范围未纳入本图；Akash Network 因挂牌价随提供方与时段波动、折算口径不稳定亦未纳入，原因见待确认清单。
+  </div>
+  <p>低价入口集中在两类：分布式市场与消费级卡。Vast.ai（约 ¥716/月折算）与 Hyperstack 的 A4000 档（约 ¥767）把门槛压到每月 800 元以内，Salad（约 ¥818）与 io.net（约 ¥920）紧随其后；最常见的档位落在 ¥1,500—2,700（Genesis Cloud、TensorDock、Google Cloud T4 档），而头部云的单卡折算月费普遍在 ¥2,700—3,900。价格与评分大体正相关，但拐点很清楚：从 ¥716 到 ¥3,476 区间评分从 6.8 抬到 8.8，越过 ¥3,500 之后评分不再随价格上升——CoreWeave（约 ¥6,390，8.6）与 Lambda（约 ¥5,624，8.4）的价值来自互联与集群能力，而不是单卡更便宜。需要提醒的是「时价 × 720 小时」只是满月折算的记账口径，真实使用中按量付费远低于该值。</p>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">05</span>关键节点</h2>
+  <p class="lede">按公开可查的上市、停服、整合、降价与涨价时点排列，用于理解 2026 年算力供需是怎么反转的。</p>
+  <div class="timeline" id="timeline"></div>
+  <p style="margin-top:22px;">两年之内，海外算力市场完成了两件事：专营新云走向资本化（CoreWeave 于 2025 年 3 月上市，成为第一家公开交易的 GPU 云），一方租赁退出（NVIDIA 在 2025 年底不再把 DGX Cloud 当作公有云运营，需求转向 Lepton 等租赁/调度市场）。2026 年 3 月之后，叙事从「谁更便宜」变成「谁有电、谁有卡」：Nebius 自 10-01 起把 H100 由 $3.85 上调至 $4.50/GPU·小时，AWS 于 10-07 上调全部 GPU Capacity Blocks 约 15%，第三方横评的评价维度也转向「已签约电力」与集群规模。对采购方而言，纪律是：先锁定长期合约与预留，再谈单价。</p>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">06</span>厂商能力核验</h2>
+  <p class="lede">对已停服、已被整合/更名，以及「名字像算力平台但实际不对外零售」的对象逐一给出核验结论，构成本轮调研的排除清单（VERIFIED）；没有能力或无法核实就如实写。</p>
+  <div class="tablewrap">
+    <table>
+      <colgroup><col style="width:16%"><col style="width:16%"><col style="width:68%"></colgroup>
+      <thead>
+        <tr><th>厂商 / 产品</th><th>核验结论</th><th>说明</th></tr>
+      </thead>
+      <tbody id="verifyTable"></tbody>
+    </table>
+  </div>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">07</span>信源索引</h2>
+  <p class="lede">按产品分组，标注每条来源支撑哪些字段。三类信源交叉验证：官方站点与官方文档、行业比价与横评站点、公开报道与社区实测。</p>
+  <div id="sourceIndex"></div>
+</section>
+
+<section>
+  <h2 class="sec"><span class="no">08</span>待确认与无法核实项</h2>
+  <p class="lede">以下条目在本轮公开检索范围内无法取得可靠官方口径，如实列出，未作推测填补。</p>
+  <div class="todo" id="todoList"></div>
+</section>
+
+<footer>
+  <p><b>方法与免责：</b>本报告信息采集截止北京时间 2026 年 10 月 8 日，价格引用美元原值并约合人民币（1 USD ≈ 7.1 CNY，欧元档位先按 €1 ≈ $1.08 折美元再换算），均为量级参考。“云算力平台质量评分”为主观共识评分，由作者综合官方公开信息、行业比价与横评站点以及开发者社区口碑给出，非厂商官方指标，也不等同于客观基准测试；同一平台在不同卡型形态（PCIe/SXM/NVLink）、地域、合约期限与库存时点下价格差异极大。</p>
+  <p><b>已剔除的非官方来源：</b>代理商、第三方域名自称官方或提供更低报价的页面，均不作为官方依据；带推广性质的内容源（含各厂商自营的竞品对比文章）已在引用时标注为「比价与横评」。本报告中「美元/GPU·小时」为厂商官方或权威比价站点的公开口径。</p>
+  <p>价格、库存与免费额度变动频繁，正式采购前请以厂商官方页面、控制台实价与商务报价为准。</p>
+</footer>
+
+<script>
+/* =====================================================================
+   填充说明（两个子代理按此规范填充，勿改动 CSS 与渲染函数结构）：
+   1. PRODUCTS：每个产品一个对象，字段见下。cat 取值 video/live/clone/interactive；
+      score 为 10 分制主观共识分（可小数，null 表示不评分，如"无此能力"条目）；
+      avail 取值 free（有免费额度）/ paid（付费或仅 API）；
+      site 为官方域名（label 显示名，url 链接）；
+      free 写免费额度具体口径；price 写价格（国内人民币；海外 USD 并附 cny 约合人民币）；
+      basis 写 10-25 字评分依据；note 写特点与局限（40-90 字）。
+   2. PRICE_POINTS：x=最低付费月费（元，免费记 0，海外换算为人民币），y=评分，free=true/false，lp=标签位置(top/bottom/right/left)。
+   3. TIMELINE：{when, what, why, hot}，hot=true 表示关键节点（赭色圆点）。
+   4. VERIFIED：{name, verdict, note}，verdict 可含 <span class="tag">…</span>。
+   5. SOURCES：按产品分组，items 为 [来源类型, 链接HTML(或纯文本), 支撑字段]。
+   6. TODOS：[产品, 待确认说明]。
+   7. 除数据数组外，还需替换：报头 kicker/h1/subtitle/meta-row、strip 四个数字、
+      各 section 的 lede 与解读段落、（01）核心结论三卡、（05）时间线总结。
+   8. 完成后用 Edge/Chrome 无头模式截桌面与移动两张图存入 _shots 目录并自查布局。
+===================================================================== */
+
+const PRODUCTS = [
+  {
+    name:"AWS EC2（GPU 实例）", dev:"Amazon Web Services", cat:"cloud",
+    score:9.0, avail:"paid",
+    site:{label:"aws.amazon.com", url:"https://aws.amazon.com/ec2/capacityblocks/pricing/"},
+    free:"新账户可使用 AWS 免费套餐额度；GPU 实例本身不免费，Capacity Blocks 需按块预付",
+    price:"Capacity Blocks（美东）：p5.48xlarge（8×H100）$41.528/小时（$5.191/加速器）；p4d.24xlarge（8×A100）$11.80/小时（$1.475）；p4de.24xlarge $17.712/小时（$2.214）",
+    cny:"约 ¥294.8/小时（8×H100 整机）、¥83.8/小时（8×A100 整机）；1 USD≈7.1 CNY",
+    basis:"共识区间 8.7–9.2；全球覆盖、合规与生态第一，但 GPU 单价最高",
+    note:"地域与合规覆盖最全、实例族最完整，Capacity Blocks 支持远期预留；短板是 GPU 单价为新云中位数的 2–3 倍，10 月再涨约 15%。"
+  },
+  {
+    name:"Microsoft Azure（GPU VM）", dev:"Microsoft（Azure）", cat:"cloud",
+    score:8.8, avail:"free",
+    site:{label:"azure.microsoft.com", url:"https://azure.microsoft.com/en-gb/pricing/details/ai-foundry-models/aoai/"},
+    free:"新账户赠 $200 信用额度（30 天）；GPU 实例不免费",
+    price:"ND96isr_H100_v5（8×H100）$98.32/小时 = $12.29/GPU·小时；AI Foundry 托管计算 H100 $7.91、A100 80G $3.95、H200 $9.10（每计算小时）",
+    cny:"约 ¥698/小时（8×H100 整机）、¥87.3/GPU·小时；1 USD≈7.1 CNY",
+    basis:"共识区间 8.5–9.0；企业合规与混合云最强，GPU 溢价也最高",
+    note:"企业合规与混合云最强，ND/NC 系列覆盖 A100/H100/H200 与 MI300，另有 AI Foundry 托管计算；短板是 GPU 溢价最高。"
+  },
+  {
+    name:"Google Cloud（GPU / TPU）", dev:"Alphabet（Google Cloud）", cat:"cloud",
+    score:8.7, avail:"free",
+    site:{label:"cloud.google.com", url:"https://cloud.google.com/products/compute/pricing/accelerator-optimized"},
+    free:"新账户赠 $300 免费额度（90 天）；GPU 实例不免费",
+    price:"a3-megagpu-8g（8×H100）按需 $93.4007/小时；Spot $55.894/小时（≈$6.99/GPU·小时）；1 年 CUD $64.2066、3 年 CUD $40.6501；Vertex AI H100 $11.7559/小时、A100 80GB $4.51729/小时",
+    cny:"约 ¥663/小时（8×H100 整机）；Spot 折合约 ¥49.6/GPU·小时；1 USD≈7.1 CNY",
+    basis:"共识区间 8.4–9.0；TPU 自研算力与 Spot/折扣体系独特",
+    note:"除 NVIDIA GPU 外提供自研 TPU，Spot 与 CUD 三档可把单价压到按需的约 40%；短板是热门 GPU 需配额、整机颗粒度大。"
+  },
+  {
+    name:"CoreWeave", dev:"CoreWeave, Inc.", cat:"platform",
+    score:8.6, avail:"paid",
+    site:{label:"coreweave.com", url:"https://wf.coreweave.com/pricing"},
+    free:"待确认（无公开免费额度，以签约与用量承诺为主）",
+    price:"HGX H100（8×H100 80GB）按需 $49.24/小时（$6.155/GPU·小时）、Spot $19.51/小时（$2.44）；L40 约 $1.25/GPU·小时；1 年预留第三方口径约 $2.00/GPU·小时",
+    cny:"约 ¥349.6/小时（8 卡整机）、¥43.7/GPU·小时；Spot 约 ¥17.3；1 USD≈7.1 CNY",
+    basis:"共识区间 8.3–8.8；企业级 GPU 专营云标杆，InfiniBand 集群成熟",
+    note:"企业级 GPU 专营标杆，裸金属 NVIDIA 集群 + 托管 K8s，可交付 GB200 NVL72 级集群；短板是需商务签约、按需价高于市场。"
+  },
+  {
+    name:"Lambda Labs", dev:"Lambda, Inc.", cat:"platform",
+    score:8.4, avail:"paid",
+    site:{label:"lambda.ai", url:"https://lambda.ai/"},
+    free:"待确认（无免费档；按秒计费，承诺消费可议价）",
+    price:"H100 SXM 80GB 按需 $2.49–3.99/GPU·小时；A100 80GB $2.79、A100 40GB $1.10–1.99；B200 SXM6 $6.69、V100 $0.79；1-Click Clusters 的 B200 自 $9.86/GPU·小时",
+    cny:"约 ¥17.7–28.3/GPU·小时；A100 40GB 约 ¥7.8–14.1；1 USD≈7.1 CNY",
+    basis:"共识区间 8.1–8.7；ML 社区口碑好、按秒计费与透明定价",
+    note:"面向 ML 工作流的简洁定价，按秒计费、免出网流量费，1-Click Clusters 支持 16–512 卡；短板是仅美国区域、常处于售罄。"
+  },
+  {
+    name:"Crusoe Cloud", dev:"Crusoe Energy", cat:"platform",
+    score:8.0, avail:"paid",
+    site:{label:"crusoe.ai", url:"https://www.crusoe.ai/cloud/pricing"},
+    free:"待确认（无免费额度公示）",
+    price:"H100 80GB SXM $3.90/GPU·小时、H200 $4.29、A100 80GB SXM $2.30（PCIe $2.00）、L40S $1.50、AMD MI300X $3.45；Spot H100 $1.60、MI300X $0.95；按分钟计费",
+    cny:"H100 约 ¥27.7/GPU·小时；Spot 约 ¥11.4；1 USD≈7.1 CNY",
+    basis:"共识区间 7.7–8.3；能源侧自建、按分钟计费与多卡型",
+    note:"以自建能源与数据中心切入，提供 H100/H200/A100 与 MI300X，支持按分钟计费与 Spot；短板是区域集中美国、无免费档。"
+  },
+  {
+    name:"Nebius AI Cloud", dev:"Nebius Group", cat:"platform",
+    score:8.2, avail:"paid",
+    site:{label:"nebius.com", url:"https://nebius.com/prices"},
+    free:"无免费额度；但支持自助开通最高 32 卡 Hopper/Blackwell，无需 waitlist 与最低消费承诺",
+    price:"2026-10-01 起：H100 NVLink $4.50/GPU·小时、H200 $5.40、B200 $8.50、B300 $9.50、RTX PRO 6000 $1.80；H100 抢占 $2.15",
+    cny:"H100 约 ¥31.95/GPU·小时、抢占约 ¥15.27；RTX PRO 6000 约 ¥12.78；1 USD≈7.1 CNY",
+    basis:"共识区间 7.9–8.5；自助开通与大集群能力兼顾，2026 年涨价明显",
+    note:"非虚拟化 GPU + InfiniBand，自助可即时开通最多 32 卡并托管 K8s/Slurm；短板是 10-01 起 H100 涨至 $4.50/卡时。"
+  },
+  {
+    name:"Together AI", dev:"Together Computer, Inc.", cat:"platform",
+    score:8.1, avail:"paid",
+    site:{label:"together.ai", url:"https://www.together.ai/pricing"},
+    free:"新用户赠 $1 推理额度（用于模型 API，不等于 GPU 租赁额度）",
+    price:"H100 按需 $3.99/GPU·小时（预留低至 $3.19）、H200 $5.99（预留 $3.99）、B200 $8.19；抢占 H100 $1.99；训练集群 8–256 卡",
+    cny:"H100 约 ¥28.3/GPU·小时、抢占约 ¥14.1；1 USD≈7.1 CNY",
+    basis:"共识区间 7.8–8.4；推理与训练一体、集群调度成熟",
+    note:"「GPU 集群 + 开源模型推理」双主线，提供按需/预留/抢占与 8–256 卡集群；短板是单价高于分布式市场，免费额度仅限 API。"
+  },
+  {
+    name:"Fluidstack", dev:"Fluidstack Ltd.", cat:"platform",
+    score:7.7, avail:"paid",
+    site:{label:"fluidstack.io", url:"https://www.fluidstack.io/"},
+    free:"待确认（无免费额度公示，以合约与批发为主）",
+    price:"H100 SXM 起 $2.10–2.40/GPU·小时；A100 80GB SXM $1.30（第三方比价与媒体口径）",
+    cny:"H100 约 ¥14.9–17.0/GPU·小时；A100 80GB 约 ¥9.2；1 USD≈7.1 CNY",
+    basis:"共识区间 7.4–8.0；批发型低价供给，零售透明度低",
+    note:"以批发与长期合约向 AI 公司提供 H100/H200 集群，价格偏低、部署快；短板是不面向个人零售、官网缺少公开价目表。"
+  },
+  {
+    name:"Genesis Cloud", dev:"Genesis Cloud（欧盟主权云）", cat:"platform",
+    score:7.6, avail:"paid",
+    site:{label:"genesiscloud.com", url:"https://www.genesiscloud.com/"},
+    free:"待确认（官网有试用申请入口，未公示统一额度）",
+    price:"H100 80GB SXM5 $2.19/GPU·小时（8 卡节点 $17.52/小时）、A100 80GB $2.12、A100 40GB $2.39、V100 32GB $1.19、T4 $0.29；区间 $0.08–2.80",
+    cny:"H100 约 ¥15.5/GPU·小时；T4 约 ¥2.06；1 USD≈7.1 CNY",
+    basis:"共识区间 7.3–7.9；欧盟数据主权与绿色能源，规模偏小",
+    note:"主打欧盟数据主权与 100% 可再生能源，提供 H100/A100/V100/T4 与 vGPU 切分；短板是集群规模与最新卡型供给有限。"
+  },
+  {
+    name:"Hyperstack", dev:"Hyperstack（原 NexGen Cloud）", cat:"platform",
+    score:7.8, avail:"paid",
+    site:{label:"hyperstack.cloud", url:"https://www.hyperstack.cloud/gpu-pricing"},
+    free:"待确认（无免费档；按小时计费，预留可享折扣）",
+    price:"H200 SXM $3.99/小时、H100 SXM $3.20、H100 NVLink $2.60、A6000 $0.50、A4000 $0.15；预留 H100 NVLink 起 $1.82、H100 SXM 起 $2.72；Spot 最多再降 20%",
+    cny:"A4000 约 ¥1.07/小时、H100 NVLink 约 ¥18.46；1 USD≈7.1 CNY",
+    basis:"共识区间 7.5–8.1；按小时透明计价、预留折扣力度大",
+    note:"自营 GPU 云，公开价目清晰、按小时计费，预留约 30% 折扣并支持 Spot，另有图形卡档；短板是规模与地域覆盖偏小。"
+  },
+  {
+    name:"JarvisLabs", dev:"JarvisLabs.ai", cat:"platform",
+    score:7.9, avail:"paid",
+    site:{label:"jarvislabs.ai", url:"https://jarvislabs.ai/pricing"},
+    free:"待确认（无免费额度；按分钟计费，存储另计）",
+    price:"H200 SXM $4.59/小时、H100 SXM $3.49、RTX Pro 6000 $2.19、A100 80GB $1.49、A100 40GB $0.89；按分钟计费",
+    cny:"A100 40GB 约 ¥6.32/小时、H100 约 ¥24.8；1 USD≈7.1 CNY",
+    basis:"共识区间 7.6–8.2；面向研究者的极简 notebook 体验",
+    note:"面向研究者的极简 notebook 体验，按分钟计费、环境预置，适合微调与实验；短板是区域仅限印度与欧洲、存储另计费。"
+  },
+  {
+    name:"RunPod", dev:"RunPod, Inc.", cat:"platform",
+    score:8.5, avail:"paid",
+    site:{label:"runpod.io", url:"https://www.runpod.io/"},
+    free:"待确认（偶有赠送额度活动，未公示统一免费档）",
+    price:"Secure Cloud：H100 SXM $3.49、H100 PCIe $2.89、A100 PCIe $1.59、RTX A6000 $0.53/小时；Community Cloud：$1.99 / $1.19 / $0.33；RTX A5000 低至 $0.16",
+    cny:"H100 SXM 约 ¥24.8/小时；RTX A5000 约 ¥1.14、A6000（Community）约 ¥2.34；1 USD≈7.1 CNY",
+    basis:"共识区间 8.2–8.8；按秒计费 + Serverless，个人与团队通吃",
+    note:"Secure/Community 双轨，提供 Pod 与 Serverless GPU、按秒计费，个人开发者主流选择；短板是 Community 档稳定性与合规参差。"
+  },
+  {
+    name:"Paperspace / DigitalOcean", dev:"DigitalOcean（含 Paperspace）", cat:"platform",
+    score:7.4, avail:"paid",
+    site:{label:"digitalocean.com", url:"https://docs.digitalocean.com/products/paperspace/pricing/"},
+    free:"待确认（DigitalOcean 新用户赠 $200 额度，GPU Droplet 是否适用需确认）",
+    price:"Paperspace：A6000 $1.89、V100 $2.30、A100 $3.09、A100-80G $3.18、H100 $5.95/小时；DigitalOcean GPU Droplets：H100 $4.41/GPU·小时（按需）、12 个月预留 $3.26，RTX4000 $0.76、L40s $1.57",
+    cny:"RTX4000 约 ¥5.40/小时；H100（DO）约 ¥31.3/GPU·小时；1 USD≈7.1 CNY",
+    basis:"共识区间 7.1–7.7；托管 notebook 体验好，但价格偏贵",
+    note:"Gradient Notebook 面向中小团队，配套存储快照与 API；短板是单卡价高于新云与市场，2023 年已并入 DigitalOcean。"
+  },
+  {
+    name:"Vast.ai", dev:"Vast.ai Inc.", cat:"share",
+    score:7.7, avail:"paid",
+    site:{label:"vast.ai", url:"https://vast.ai/products/gpu-cloud"},
+    free:"待确认（无免费额度，需预付充值）",
+    price:"H100 低至 $0.90/小时、RTX 4090 低至 $0.14–0.35/小时；按秒计费；On-Demand / Interruptible / Reserved 三档",
+    cny:"RTX 4090 约 ¥1.0–2.5/小时；H100 约 ¥6.4 起；1 USD≈7.1 CNY",
+    basis:"共识区间 7.4–8.0；价格下限最低，供给来自第三方机房",
+    note:"P2P 撮合市场，价格下限最低并支持按秒计费与竞价；短板是机器质量与稳定性差异极大、无统一 SLA，数据需自行保障。"
+  },
+  {
+    name:"TensorDock", dev:"TensorDock（Voltage Park 旗下）", cat:"share",
+    score:7.3, avail:"paid",
+    site:{label:"tensordock.com", url:"https://www.tensordock.com/"},
+    free:"待确认（无免费额度）",
+    price:"H100 SXM5 起 $2.25/小时、A100 SXM4 起 $1.80、RTX 4090 起 $0.35、V100 起 $0.28；按微秒计费；45 种卡、100+ 位置",
+    cny:"RTX 4090 约 ¥2.49/小时；H100 约 ¥15.98；1 USD≈7.1 CNY",
+    basis:"共识区间 7.0–7.6；计费粒度最细、位置与卡型丰富",
+    note:"聚合分布式机房的 GPU 市场，按微秒计费、45 种卡、100+ 位置；短板是节点可用性与镜像环境参差，企业合规支撑有限。"
+  },
+  {
+    name:"Salad", dev:"Salad Technologies", cat:"share",
+    score:6.9, avail:"paid",
+    site:{label:"salad.com", url:"https://salad.com/pricing"},
+    free:"待确认（无免费额度，但单价为全表最低）",
+    price:"RTX 4090 $0.16（最低优先级）–$0.33（高优先级）/小时、RTX 3090 $0.09–0.10、RTX 5090 $0.25–0.50、RTX 4080 $0.11、GTX 1650 起 $0.02；按秒计费",
+    cny:"RTX 4090 约 ¥1.14–2.34/小时、RTX 3090 约 ¥0.64；1 USD≈7.1 CNY",
+    basis:"共识区间 6.6–7.2；分布式消费级卡价格最低，可靠性最弱",
+    note:"把全球 190+ 国家消费级 GPU 聚合成云，按秒计费、单价为全表最低；短板是任务可被抢占、卡型与带宽不可控，不适合训练。"
+  },
+  {
+    name:"Akash Network", dev:"Overclock Labs（Akash）", cat:"share",
+    score:6.6, avail:"paid",
+    site:{label:"akash.network", url:"https://akash.network/"},
+    free:"待确认（无免费额度；以法币或 AKT 结算，链上撮合）",
+    price:"去中心化 GPU 市场：8×H100 约 $2.09/卡（合计 $16.72/小时）；另有极低按需档（P4 级）",
+    cny:"H100 约 ¥14.84/卡·小时；1 USD≈7.1 CNY",
+    basis:"共识区间 6.3–6.9；开源去中心化市场，价格波动大",
+    note:"基于 Cosmos 的开源去中心化算力市场，由独立提供方挂牌、反向拍卖定价；短板是价格逐小时波动、SLA 无统一保障。"
+  },
+  {
+    name:"io.net", dev:"io.net（IO Research）", cat:"share",
+    score:6.8, avail:"paid",
+    site:{label:"io.net", url:"https://io.net/"},
+    free:"待确认（有 Cloud 免费层宣传，需以官网当期口径为准）",
+    price:"on-demand H100 SXM $2.20/小时、RTX 4090 $0.18/小时（聚合分布式集群）",
+    cny:"H100 约 ¥15.6/小时、RTX 4090 约 ¥1.28；1 USD≈7.1 CNY",
+    basis:"共识区间 6.5–7.1；聚合网络价格低，节点质量参差",
+    note:"把全球分布式 GPU 聚合成可编排集群，价格低于主流新云并支持集群部署；短板是节点异构导致性能波动、任务可中断。"
+  }
+];
+
+const PRICE_POINTS = [
+  {name:"Vast.ai", x:716, y:7.7, free:false, lp:"top"},
+  {name:"Hyperstack", x:767, y:7.8, free:false, lp:"bottom"},
+  {name:"Salad", x:818, y:6.9, free:false, lp:"top"},
+  {name:"io.net", x:920, y:6.8, free:false, lp:"bottom"},
+  {name:"Genesis Cloud", x:1483, y:7.6, free:false, lp:"top"},
+  {name:"TensorDock", x:1790, y:7.3, free:false, lp:"bottom"},
+  {name:"Google Cloud", x:1790, y:8.7, free:true, lp:"top"},
+  {name:"RunPod", x:2556, y:8.5, free:false, lp:"bottom"},
+  {name:"AWS EC2", x:2689, y:9.0, free:true, lp:"top"},
+  {name:"Microsoft Azure", x:3476, y:8.8, free:true, lp:"bottom"},
+  {name:"Paperspace / DigitalOcean", x:3885, y:7.4, free:false, lp:"top"},
+  {name:"JarvisLabs", x:4550, y:7.9, free:false, lp:"bottom"},
+  {name:"Lambda Labs", x:5624, y:8.4, free:false, lp:"top"},
+  {name:"CoreWeave", x:6390, y:8.6, free:false, lp:"bottom"},
+  {name:"Fluidstack", x:6645, y:7.7, free:false, lp:"top"},
+  {name:"Crusoe Cloud", x:7668, y:8.0, free:false, lp:"bottom"}
+];
+
+const TIMELINE = [
+  {when:"2023-02", what:"DigitalOcean 收购 Paperspace", why:"托管 notebook 型 GPU 平台进入整合期，产品线并入 GPU Droplets 后继续运营。", hot:false},
+  {when:"2025-03", what:"CoreWeave 完成 IPO，成为首家上市的 GPU 专营新云", why:"算力专营云第一次拿到公开市场估值锚，行业资本化开启。", hot:true},
+  {when:"2025-08", what:"第三方横评指出 17 家新云的 H100 小时价相差 4 倍", why:"$1.45–6.15/GPU·小时的价差说明「同一个 H100」在渠道与合约上完全不是一个价。", hot:false},
+  {when:"2025 年底", what:"NVIDIA 不再把 DGX Cloud 作为对标超大规模云的公有云运营", why:"一方 GPU 租赁退出，业务并入工程组织，需求转向 Lepton 等租赁/调度市场。", hot:true},
+  {when:"2026-08-23", what:"2026 GPU 新云横评发布（CoreWeave/Nebius/Lambda/Crusoe/Groq）", why:"评价维度从单价转向「已签约电力」与集群规模，算力竞争变成能源与资本竞争。", hot:false},
+  {when:"2026-09-17", what:"Nebius 公告自 10-01 起上调 H100/H200/B200 价格", why:"H100 由 $3.85 涨至 $4.50/GPU·小时，新云也加入涨价，供给紧张的信号明确。", hot:true},
+  {when:"2026-10-01", what:"Nebius 新价格正式生效", why:"H100 $4.50、H200 $5.40、B200 $8.50、B300 $9.50/GPU·小时。", hot:false},
+  {when:"2026-10-02", what:"第三方口径：RunPod H100 $3.49 vs Azure $12.29 / GPU·小时", why:"超大规模云对同款芯片的挂牌溢价达 2.93 倍（相对新云中位数）。", hot:false},
+  {when:"2026-10-07", what:"AWS 上调所有 GPU Capacity Blocks 价格约 15%", why:"H100/H200 需求持续超过供给，头部云与新云同步涨价。", hot:true},
+  {when:"2026-10-08", what:"本报告信息口径日", why:"全部价格与免费额度以该日公开信息为准。", hot:false}
+];
+
+const VERIFIED = [
+  {name:"NVIDIA DGX Cloud", verdict:"<span class=\"tag\">已停止对外租赁</span>", note:"2025 年底起 NVIDIA 不再把 DGX Cloud 作为对标超大规模云的公有云运营，业务并入工程组织，不再向新客户提供一方 GPU 租赁；相关需求转向 Lepton 等 GPU 租赁/调度市场。"},
+  {name:"Banana.dev", verdict:"<span class=\"tag\">已停服</span>", note:"2024-02-01 公告停止 Serverless GPU 服务，2024-03-31 中午 PST 正式关停；官方建议客户迁移至 Replicate / Modal / Baseten / Cerebrium。此类「Serverless GPU 中间层」是算力赛道最先出清的一环。"},
+  {name:"Paperspace", verdict:"<span class=\"tag\">已整合（非停服）</span>", note:"2023 年被 DigitalOcean 收购，产品线并入 DigitalOcean GPU Droplets 并在 Paperspace 品牌下继续运营；常被误判为停服，特此说明。"},
+  {name:"Verda（原 DataCrunch）", verdict:"<span class=\"tag\">已更名</span>", note:"DataCrunch 以 Verda 品牌继续提供自助式 GPU 云，属于更名而非停服；检索中若见到 DataCrunch 名称，应识别为同一主体。"},
+  {name:"xAI Colossus 1", verdict:"<span class=\"tag\">非公开算力平台</span>", note:"2026 年 xAI 解散并入 SpaceX，Colossus 1（约 22 万卡 / 300MW）整体出租给 Anthropic；属自有集群整体出租，不向公众零售算力，故不纳入主表。"},
+  {name:"超大规模云的 GPU 挂牌价", verdict:"<span class=\"tag\">口径提示（非停服）</span>", note:"AWS/Azure/GCP 的 GPU 挂牌价普遍为新云中位数的 2–3 倍，但含合规、发票、配额保障与全球网络；比价时须区分「挂牌价」与「已签约/预留价」，二者的差距常超过 2 倍。"}
+];
+
+const SOURCES = [
+  {p:"AWS EC2（GPU 实例）", items:[
+    ["官方文档","https://aws.amazon.com/ec2/capacityblocks/pricing/","p5/p4d/p4de 的 Capacity Blocks 官方小时价与加速器单价"],
+    ["比价与横评","https://www.aitooldiscovery.com/ai-infra/cloud-gpu-providers-compared","第三方口径 H100 $6.88、A100 80GB $3.43、B200 $14.24 / GPU·小时"],
+    ["比价与横评","https://axis-intelligence.com/gpu-prices/","2026-10-02 挂牌价对比与 AWS 于 10-07 上调 Capacity Blocks 约 15%"]
+  ]},
+  {p:"Microsoft Azure（GPU VM）", items:[
+    ["官方文档","https://azure.microsoft.com/en-gb/pricing/details/ai-foundry-models/aoai/","AI Foundry 托管计算 A100 80G $3.95、H100 $7.91、H200 $9.10"],
+    ["比价与横评","https://www.economize.cloud/blog/cloud-gpu-pricing-comparison/","ND96isr_H100_v5 整机 $98.32/小时 与 Azure Databricks GPU 小时价"],
+    ["比价与横评","https://cloud-gpus.com/providers/azure/","A100 80GB PCIe 起 $0.68/GPU·小时（第三方口径）"]
+  ]},
+  {p:"Google Cloud（GPU / TPU）", items:[
+    ["官方文档","https://cloud.google.com/products/compute/pricing/accelerator-optimized","a3-megagpu-8g 按需/Spot/Flex-start/CUD 官方小时价"],
+    ["官方文档","https://cloud.google.com/vertex-ai/pricing","Vertex AI H100/A100/H200 计算小时价"],
+    ["官方文档","https://cloud.google.com/spot-vms/pricing","Spot GPU 各机型折扣价"]
+  ]},
+  {p:"CoreWeave", items:[
+    ["官方站点","https://wf.coreweave.com/pricing","HGX H100 按需 $49.24/小时、Spot $19.51/小时与节点规格"],
+    ["比价与横评","https://gpuadvisor.com/cheapest-h100-cloud","H100 SXM5 按需 $6.16、1 年预留约 $2.00（第三方口径）"],
+    ["比价与横评","https://www.runpod.io/articles/alternatives/coreweave","竞品视角的 CoreWeave 定位与集群能力描述"]
+  ]},
+  {p:"Lambda Labs", items:[
+    ["官方站点","https://lambda.ai/","官方入口与产品定位"],
+    ["比价与横评","https://www.runpod.io/articles/alternatives/togetherai","H100 SXM $3.99、A100 80GB $2.79、B200 $6.69、V100 $0.79 与 1-Click Clusters 起价"],
+    ["比价与横评","https://www.runpod.io/articles/alternatives/paperspace","H100 80GB $2.49/小时、A100 40GB $1.10/小时 与免出网流量费"],
+    ["媒体报道","https://www.marktechpost.com/2026/08/23/best-gpu-neoclouds-2026/amp/","2026 新云横评中的 Lambda（美国 15 个数据中心、微软合约）"]
+  ]},
+  {p:"Crusoe Cloud", items:[
+    ["官方站点","https://www.crusoe.ai/cloud/pricing","H100/H200/A100/L40S/MI300X 官方 GPU 小时价"],
+    ["官方文档","https://support.crusoecloud.com/hc/en-us/articles/37421109850907","按分钟计费与 Spot 价格口径"],
+    ["比价与横评","https://metronome.com/pricing-index/crusoe-cloud","第三方价格索引交叉验证"]
+  ]},
+  {p:"Nebius AI Cloud", items:[
+    ["官方站点","https://nebius.com/prices","2026-10-01 起 H100/H200/B200/B300/RTX PRO 6000 的官方价目表"],
+    ["官方文档","https://docs.nebius.com/compute/resources/pricing","计费方式与抢占实例价格"],
+    ["公开报道","https://finance.sina.com.cn/roll/2026-09-17/doc-inisczpv3645309.shtml.md","Nebius 宣布自 10-01 起上调 GPU 价格（H100 $3.85→$4.50）"],
+    ["官方页面","https://nebius.com/self-service","自助开通最多 32 卡、无 waitlist 与最低承诺"]
+  ]},
+  {p:"Together AI", items:[
+    ["官方站点","https://www.together.ai/pricing","H100/H200/B200 按需与预留价格、抢占档"],
+    ["官方站点","https://www.together.ai/gpu-clusters","8–256 卡训练集群与 4000+ GPU 规模"]
+  ]},
+  {p:"Fluidstack", items:[
+    ["比价与横评","https://www.digitalocean.com/resources/articles/runpod-alternatives","Fluidstack H100 SXM 起 $2.10–2.40/小时（第三方口径）"],
+    ["比价与横评","https://datastorage.com/gpu/nvidia-h100/","H100 供应商价格对照表"]
+  ]},
+  {p:"Genesis Cloud", items:[
+    ["比价与横评","https://gpucost.org/providers","各机型小时价与区间（$0.08–2.80）"],
+    ["比价与横评","https://datastorage.com/cloud_providers/genesis-cloud/","H100 $2.19、A100 80GB $2.12、8 卡节点 $17.52/小时"],
+    ["比价与横评","https://www.hyperstack.cloud/blog/comparison/top-cloud-gpu-providers","2026 主流云 GPU 供应商横评（含欧盟主权云定位）"]
+  ]},
+  {p:"Hyperstack", items:[
+    ["官方站点","https://www.hyperstack.cloud/gpu-pricing","H200/H100/A6000/A4000 官方小时价、预留与 Spot 折扣"],
+    ["比价与横评","https://www.hyperstack.cloud/blog/comparison/top-cloud-gpu-providers","供应商横评与自身定位"]
+  ]},
+  {p:"JarvisLabs", items:[
+    ["官方站点","https://jarvislabs.ai/pricing","H200/H100/RTX Pro 6000/A100 各档小时价与按分钟计费"],
+    ["官方页面","https://jarvislabs.ai/gpu/nvidia-a100-80gb","A100 80GB 规格与区域（印度/欧洲）"]
+  ]},
+  {p:"RunPod", items:[
+    ["官方站点","https://www.runpod.io/articles/alternatives/coreweave","Secure Cloud 与 Community Cloud 各卡型小时价"],
+    ["比价与横评","https://axis-intelligence.com/gpu-prices/","2026-10-02 口径 RunPod H100 $3.49/小时"]
+  ]},
+  {p:"Paperspace / DigitalOcean", items:[
+    ["官方文档","https://docs.digitalocean.com/products/paperspace/pricing/","Paperspace 各卡型小时价（A6000/V100/A100/H100）"],
+    ["官方文档","https://docs.digitalocean.com/products/droplets/details/pricing/","DigitalOcean GPU Droplets 按需与预留价格"],
+    ["官方站点","https://www.digitalocean.com/pricing/gpu-droplets","H100 $4.41/GPU·小时、12 个月预留 $3.26"]
+  ]},
+  {p:"Vast.ai", items:[
+    ["官方站点","https://vast.ai/products/gpu-cloud","官方入口、On-Demand/Interruptible/Reserved 三档与按秒计费"],
+    ["比价与横评","https://dev.to/fastgpu/what-it-costs-to-rent-an-h100-b200-or-rtx-4090-in-september-2026-live-prices-from-28-gpu-clouds-12n3","28 家云实测价（H100 低至 $0.90）"]
+  ]},
+  {p:"TensorDock", items:[
+    ["官方站点","https://www.tensordock.com/","官方入口、45 种卡与 100+ 位置"],
+    ["比价与横评","https://www.computecomparison.com/provider/tensordock","H100/A100/4090/V100 起价与按微秒计费"],
+    ["官方控制台","https://dashboard.tensordock.com/deploy","部署页实时价格（$1.53–2.14 等档位）"]
+  ]},
+  {p:"Salad", items:[
+    ["官方站点","https://salad.com/pricing","各消费级卡型的优先级价格与按秒计费"],
+    ["比价与横评","https://getdeploying.com/salad","供应商定位与价格交叉验证"],
+    ["比价与横评","https://gpuperhour.com/providers/salad","Salad 各卡型小时价对照"]
+  ]},
+  {p:"Akash Network", items:[
+    ["官方站点","https://akash.network/","去中心化算力市场定位与结算方式"],
+    ["比价与横评","https://dev.to/klukyanov/renting-gpus-for-crypto-i-did-the-math-on-self-hosting-glm-52-3dg5","8×H100 约 $2.09/卡（合计 $16.72/小时）的实测口径"]
+  ]},
+  {p:"io.net", items:[
+    ["比价与横评","https://io.net/p/best-cloud-gpu-providers-for-ai-ml-2026","H100 SXM 与 A100 SXM 按需/预留价格表"],
+    ["官方页面","https://io.net/p/h100-gpu-cloud-where-to-rent-complete-pricing-guide-for-2026","H100 租赁价格指南与 Secure Cloud 约 $3.50/小时 口径"],
+    ["官方页面","https://io.net/p/faq-how-does-io-net-compare-to-vast-ai","与 Vast.ai 的定位差异与 $2.20/小时 H100 口径"]
+  ]},
+  {p:"排除清单与行业横评", items:[
+    ["官方公告","https://www.banana.dev/blog/sunset","Banana.dev 停止 Serverless GPU 并关停的时间"],
+    ["百科/资料","https://aiwiki.ai/wiki/nvidia_dgx_cloud","NVIDIA DGX Cloud 不再对外租赁一方的说明"],
+    ["比价与横评","https://saturncloud.io/reports/gpu-cloud-comparison-report/","2026 新云分层报告（列出 Verda 更名与自助式新云名单）"],
+    ["比价与横评","https://saturncloud.io/blog/gpu-cloud-comparison-neoclouds-2025/","17 家新云 H100 价格区间 $1.45–6.15/小时"],
+    ["媒体报道","https://www.marktechpost.com/2026/08/23/best-gpu-neoclouds-2026/amp/","2026 新云横评：已签约电力与集群规模对比"],
+    ["比价与横评","https://gpuperhour.com/","31 家云 GPU 价格目录"]
+  ]}
+];
+
+const TODOS = [
+  ["AWS Capacity Blocks 之外的价格","按需 p5/p4d 的公开单价与 Capacity Blocks 报价机制不同，本轮仅取得 Capacity Blocks 官方价；具体区域与按需价需以官网定价页为准。"],
+  ["Azure GPU 免费额度与配额","GPU 实例不在免费套餐内；$200 新账户额度是否可用于 GPU VM、以及各区域 H100/H200 配额申请周期，未取得官方统一口径。"],
+  ["Google Cloud GPU 配额","热门 GPU（H100/H200）需申请配额，不同项目的可得性差异大，未有公开的配额审批时长口径。"],
+  ["CoreWeave 官方页价格","wf.coreweave.com/pricing 为可访问的官方价目页，但企业合约价与预留价通常不公开，第三方 $2.00/GPU·小时 的 1 年预留价需商务确认。"],
+  ["Lambda Labs 无免费档","官网无免费试用；H100 单价在不同口径下为 $2.49/$2.99/$3.99，差异来自 8 卡集群与单卡、按需与预留，需以官网当期为准。"],
+  ["Crusoe / Fluidstack / Genesis 免费额度","三家均未公示免费额度或免费试用，官网是否提供试用需商务确认。"],
+  ["Vast.ai / TensorDock / Salad 免费额度","分布式与撮合市场普遍无免费额度，需预付充值；Vast.ai 的最低起价随 Host 挂牌实时波动。"],
+  ["Akash Network 免费额度与结算","无免费额度；GPU 挂牌价随提供方与时段波动，AKT 与法币结算的可得性需以官网当期说明为准。"],
+  ["io.net 免费层","官网上有 Cloud 免费层相关宣传，但适用范围与额度需以当期官网说明为准，本轮未取得明确文本。"],
+  ["Salad 的可用性口径","「日均在线 15,000–60,000+ 张消费级 GPU」为第三方口径，官方未以同一口径公示，卡型与并发随任务抢占波动。"],
+  ["超大规模云 vs 新云的价格可比性","挂牌价与预留/合约价差距常超过 2 倍，本表的美元单价均为公开挂牌或权威比价站点口径，不可直接用于预算测算。"],
+  ["欧元计价产品","个别欧洲厂商（如部分欧盟主权云）以欧元挂牌，本轮统一按 €1≈$1.08 再折人民币，均为量级参考。"],
+  ["GPU 代际口径","同一厂商的 H100 PCIe / SXM / NVLink 与 B200/B300 属不同代际与互联形态，单价不可混比，本表已逐条标注形态。"]
+];
+
+/* ================= 渲染：总表 ================= */
+const CAT = {platform:'第三方算力平台', cloud:'云厂商 GPU 实例', share:'共享与分布式算力', free:'免费普惠算力'};
+const CAT_TAG = {platform:'cat-video', cloud:'cat-live', share:'cat-clone', free:'cat-interactive'};
+const tableEl = document.getElementById('mainTable');
+PRODUCTS.forEach(function(p){
+  const availTag = p.avail === 'free'
+    ? '<span class="tag free">含免费额度</span>'
+    : '<span class="tag paid">付费开通</span>';
+  const catTag = '<span class="tag ' + CAT_TAG[p.cat] + '">' + CAT[p.cat] + '</span>';
+  const scoreHtml = (p.score === null)
+    ? '<span class="score na">—</span>'
+    : '<span class="score">' + p.score.toFixed(1) + '</span>';
+  const priceHtml = p.price + (p.cny ? '<span class="note-inline" style="display:block;margin-top:3px">' + p.cny + '</span>' : '');
+  const tr = document.createElement('tr');
+  tr.innerHTML =
+    '<td data-label="产品 / 开发方"><span class="pname">' + p.name + '</span><span class="dev">' + p.dev + '</span><span style="display:block;margin-top:6px">' + catTag + availTag + '</span></td>' +
+    '<td data-label="评分">' + scoreHtml + '</td>' +
+    '<td data-label="评分依据"><span class="basis">' + p.basis + '</span></td>' +
+    '<td data-label="官方入口"><a class="ext" href="' + p.site.url + '">' + p.site.label + '</a></td>' +
+    '<td data-label="免费额度">' + p.free + '</td>' +
+    '<td data-label="价格">' + priceHtml + '</td>' +
+    '<td data-label="特点与局限">' + p.note + '</td>';
+  tableEl.appendChild(tr);
+});
+document.getElementById('tableCaption').textContent =
+  '注：评分为主观共识评分（满分 10），非厂商官方指标。价格与免费额度均以 2026-10-08 公开信息为准（美元原值，1 USD≈7.1 CNY 约合）；标注「待确认」表示本轮未取得可靠官方口径。';
+  '注：评分为主观共识评分（满分 10），非厂商官方指标。价格与免费额度均以 2026-10-07 公开信息为准；标注「待确认」表示本轮未取得可靠官方口径。';
+
+/* ================= 渲染：时间线 ================= */
+const tlEl = document.getElementById('timeline');
+TIMELINE.forEach(function(t){
+  var d = document.createElement('div');
+  d.className = 'tnode' + (t.hot ? ' hot' : '');
+  d.innerHTML = '<div class="when">' + t.when + '</div><div class="axis"><i class="dot"></i></div>' +
+                '<div class="body"><p class="what">' + t.what + '</p><p class="why">' + t.why + '</p></div>';
+  tlEl.appendChild(d);
+});
+
+/* ================= 渲染：核验表 ================= */
+const vEl = document.getElementById('verifyTable');
+VERIFIED.forEach(function(v){
+  var tr = document.createElement('tr');
+  tr.innerHTML = '<td data-label="厂商 / 产品"><span class="pname">' + v.name + '</span></td>' +
+                 '<td data-label="核验结论">' + v.verdict + '</td>' +
+                 '<td data-label="说明">' + v.note + '</td>';
+  vEl.appendChild(tr);
+});
+
+/* ================= 渲染：信源索引 ================= */
+const srcEl = document.getElementById('sourceIndex');
+SOURCES.forEach(function(g){
+  var h = document.createElement('div');
+  h.className = 'srcgrp';
+  var rows = g.items.map(function(it){
+    var link = /^https?:/.test(it[1]) ? '<a class="ext" href="' + it[1] + '">' + it[1] + '</a>' : it[1];
+    link = link.replace(/・/g, '<br>');
+    return '<li class="srcitem">' +
+           '<span class="srclabel">' + it[0] + '</span>' +
+           '<span class="srcbody">' + link +
+           '<span class="srcfield">支撑字段：' + it[2] + '</span></span></li>';
+  }).join('');
+  h.innerHTML = '<h3>' + g.p + '</h3><ul class="srclist">' + rows + '</ul>';
+  srcEl.appendChild(h);
+});
+
+/* ================= 渲染：待确认 ================= */
+const todoEl = document.getElementById('todoList');
+TODOS.forEach(function(t, i){
+  var d = document.createElement('div');
+  d.className = 't';
+  d.innerHTML = '<div class="n">' + (i + 1) + '</div><div class="c"><b>' + t[0] + '：</b>' + t[1] + '</div>';
+  todoEl.appendChild(d);
+});
+
+/* ================= ECharts ================= */
+var C = {primary:'#12564C', accent:'#C4762A', ink:'#1F2329', ink2:'#646A73', ink3:'#8A939B', line:'#DEE3E8'};
+var CAT_COLOR = {platform:'#12564C', cloud:'#C4762A', share:'#4E7BA6', free:'#7C8A5A'};
+var FONT = '"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif';
+
+function renderScore(){
+  var el = document.getElementById('chartScore');
+  if(!el || typeof echarts === 'undefined') return;
+  var data = PRODUCTS.filter(function(p){return p.score !== null;})
+                     .slice().sort(function(a,b){return a.score - b.score;});
+  var chart = echarts.init(el);
+  chart.setOption({
+    grid:{left:8, right:72, top:18, bottom:34, containLabel:true},
+    tooltip:{
+      trigger:'axis', axisPointer:{type:'shadow'},
+      backgroundColor:'#fff', borderColor:C.line, borderWidth:1,
+      textStyle:{color:C.ink, fontFamily:FONT, fontSize:14},
+      formatter:function(ps){
+        var i = ps[0].dataIndex, p = data[i];
+        return '<b>' + p.name + '</b><br/>综合评分：' + p.score.toFixed(1) + ' / 10<br/>品类：' + CAT[p.cat] +
+               '<br/>开发者：' + p.dev + '<br/>评分依据：' + p.basis;
+      }
+    },
+    xAxis:{
+      type:'value', min:0, max:10, splitNumber:5,
+      axisLine:{show:false}, axisTick:{show:false},
+      splitLine:{lineStyle:{color:'#EDF1F4'}},
+      axisLabel:{color:C.ink3, fontFamily:FONT, fontSize:13}
+    },
+    yAxis:{
+      type:'category',
+      data:data.map(function(p){return p.name;}),
+      axisLine:{show:false}, axisTick:{show:false},
+      axisLabel:{color:C.ink, fontFamily:FONT, fontSize:13.5}
+    },
+    series:[{
+      type:'bar', barWidth:'58%',
+      data:data.map(function(p){
+        return {
+          value:p.score,
+          itemStyle:{color:CAT_COLOR[p.cat], borderRadius:[0,3,3,0]}
+        };
+      }),
+      label:{
+        show:true, position:'right', fontFamily:FONT, fontSize:13.5,
+        fontWeight:'bold', color:C.ink, formatter:function(ps){return ps.value.toFixed(1);}
+      }
+    }]
+  });
+  window.addEventListener('resize', function(){chart.resize();});
+}
+
+function renderPrice(){
+  var el = document.getElementById('chartPrice');
+  if(!el || typeof echarts === 'undefined' || !PRICE_POINTS.length) return;
+  var chart = echarts.init(el);
+  chart.setOption({
+    grid:{left:8, right:40, top:26, bottom:56, containLabel:true},
+    tooltip:{
+      trigger:'item',
+      backgroundColor:'#fff', borderColor:C.line, borderWidth:1,
+      textStyle:{color:C.ink, fontFamily:FONT, fontSize:14},
+      formatter:function(ps){
+        var d = ps.data, v = d.value;
+        return '<b>' + d.name + '</b><br/>单卡最低月费门槛：' + '¥' + v[0] + '/月（按最低档时价 × 720 小时折算）' +
+               '<br/>综合评分：' + v[1].toFixed(1);
+      }
+    },
+    xAxis:{
+      type:'value', min:-200, max:9000,
+      axisLine:{lineStyle:{color:C.line}}, axisTick:{show:false},
+      splitLine:{lineStyle:{color:'#EDF1F4'}},
+      axisLabel:{color:C.ink3, fontFamily:FONT, fontSize:13, formatter:'{value}'},
+      name:'单卡最低月费门槛（元/月，按最低档时价 × 720 小时折算）', nameLocation:'middle', nameGap:34,
+      nameTextStyle:{color:C.ink2, fontFamily:FONT, fontSize:13}
+    },
+    yAxis:{
+      type:'value', min:6.4, max:9.2, splitNumber:5,
+      axisLine:{show:false}, axisTick:{show:false},
+      splitLine:{lineStyle:{color:'#EDF1F4'}},
+      axisLabel:{color:C.ink3, fontFamily:FONT, fontSize:13},
+      name:'综合评分', nameTextStyle:{color:C.ink2, fontFamily:FONT, fontSize:13}
+    },
+    series:[{
+      type:'scatter',
+      symbolSize:16,
+      data:PRICE_POINTS.map(function(p){
+        return {
+          name:p.name,
+          value:[p.x, p.y],
+          free:p.free,
+          label:{position:p.lp, distance:10}
+        };
+      }),
+      itemStyle:{
+        color:function(ps){return ps.data.free ? C.primary : C.accent;},
+        borderColor:'#fff', borderWidth:1.5
+      },
+      label:{
+        show:true, fontFamily:FONT, fontSize:12.5, color:C.ink,
+        formatter:function(ps){return ps.data.name;}
+      },
+      markLine:{
+        silent:true, symbol:'none',
+        lineStyle:{color:C.primary, type:'dashed', width:1, opacity:.55},
+        label:{show:true, position:'insideEndTop', fontFamily:FONT, fontSize:12, color:C.primary,
+               formatter:'最低门槛档（约 ¥716/月 · Vast.ai）'},
+        data:[{xAxis:716}]
+      }
+    }]
+  });
+  window.addEventListener('resize', function(){chart.resize();});
+}
+
+renderScore();
+renderPrice();
+</script>
+
+</main>
+
+</body>
+</html>
