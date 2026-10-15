@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/logo.png" width="120" alt="ai-cloud-compute-research"></p>
+
 # 国内外云算力平台（GPU / AI 算力租赁与调度）调研（2026-10）
 
 覆盖 **中国大陆 24 项 + 海外 19 项** 云算力平台，两份报告采用同一套四分类供给口径：第三方算力平台、云厂商 GPU 实例、共享与分布式算力、免费普惠算力。
